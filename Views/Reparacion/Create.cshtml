@@ -1,0 +1,68 @@
+﻿@model List<Reparacion>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<!-- Botón para abrir el modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCrearReparacion">Crear nueva reparación</button>
+
+<!-- Modal para crear una nueva reparación -->
+<div class="modal fade" id="modalCrearReparacion" tabindex="-1" role="dialog" aria-labelledby="modalCrearReparacionLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearReparacionLabel">Crear nueva reparación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulario para crear una nueva reparación -->
+                <form asp-action="Create" method="post">
+                    <div class="form-group">
+                        <label for="fecha">Fecha</label>
+                        <input type="date" class="form-control" id="fecha" name="fecha" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nit">NIT</label>
+                        <input type="text" class="form-control" id="nit" name="nit" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="motocicleta">Motocicleta</label>
+                        <input type="text" class="form-control" id="motocicleta" name="motocicleta" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mecanico">Mecánico</label>
+                        <input type="text" class="form-control" id="mecanico" name="mecanico" required>
+                    </div>
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="convertidoAVenta" name="convertidoAVenta">
+                        <label class="form-check-label" for="convertidoAVenta">Convertido a venta</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Crear</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="table table-bordered table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th>Código Reparación</th>
+            <th>Fecha</th>
+            <th>NIT</th>
+            <th>Nombre</th>
+            <th>Motocicleta</th>
+            <th>Mecánico</th>
+            <th>Convertido a venta</th>
+            <th>Código asignación permisos</th>
+        </tr>
+   
