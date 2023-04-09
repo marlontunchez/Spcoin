@@ -6,8 +6,7 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<a asp-action="Create" class="btn btn-primary mb-3">Crear nueva reparación</a>
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#crearReparacionModal">Crear nueva reparación</button>
+<a href="@Url.Action("Create", "Reparacion")" class="btn btn-primary mb-3">Crear nueva reparación</a>
 
 @if (Model == null || !Model.Any())
 {
