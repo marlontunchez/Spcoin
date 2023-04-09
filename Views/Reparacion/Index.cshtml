@@ -14,35 +14,35 @@
 }
 else
 {
-    <table class="table table-bordered table-hover">
-        <thead class="thead-dark">
+<table class="table table-bordered table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th>Código Reparación</th>
+            <th>Fecha</th>
+            <th>NIT</th>
+            <th>Nombre</th>
+            <th>Motocicleta</th>
+            <th>Mecánico</th>
+            <th>Convertido a venta</th>
+            <th>Código asignación permisos</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var reparacion in Model)
+        {
             <tr>
-                <th>Código Reparación</th>
-                <th>Fecha</th>
-                <th>NIT</th>
-                <th>Nombre</th>
-                <th>Motocicleta</th>
-                <th>Mecánico</th>
-                <th>Convertido a venta</th>
-                <th>Código asignación permisos</th>
+                <td>@reparacion.CodigoReparacion</td>
+                <td>@reparacion.Fecha.ToShortDateString()</td>
+                <td>@reparacion.Nit</td>
+                <td>@reparacion.Nombre</td>
+                <td>@reparacion.Motocicleta</td>
+                <td>@reparacion.Mecanico</td>
+                <td>@(reparacion.ConvertidoAVenta ? "Sí" : "No")</td>
+                <td>@reparacion.Codigoasignacionpermisos</td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var reparacion in Model)
-            {
-                <tr>
-                    <td>@reparacion.CodigoReparacion</td>
-                    <td>@reparacion.Fecha.ToShortDateString()</td>
-                    <td>@reparacion.Nit</td>
-                    <td>@reparacion.Nombre</td>
-                    <td>@reparacion.Motocicleta</td>
-                    <td>@reparacion.Mecanico</td>
-                    <td>@(reparacion.ConvertidoAVenta ? "Sí" : "No")</td>
-                    <td>@reparacion.Codigoasignacionpermisos</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
 }
 
 @section Scripts {

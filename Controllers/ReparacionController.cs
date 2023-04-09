@@ -50,10 +50,10 @@ namespace SPCOIN.Controllers
                 return View(reparacionesrealizadas);
             }
             catch (Exception e)
-            {
+        {
                 ViewBag.Error = e.Message;
-                return View();
-            }
+            return View();
+        }
         }
 
 
