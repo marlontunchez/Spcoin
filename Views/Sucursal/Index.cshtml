@@ -18,6 +18,8 @@
             @foreach (var row in Model)
             {
                 <tr onclick="location.href='@Url.Action("Permisos", "Permisos", new { CodigoAsignacionPermisos = row.CodigoAsignacionPermisos })'">
+=======
+             
                     <td class="d-none">@row.CodigoAsignacionPermisos</td>
                     <td class="d-none">@row.CodigoSucursal</td>
                     <td>@row.Nombre</td>
