@@ -1,0 +1,44 @@
+﻿@model List<Reparacion>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<a asp-action="Create" class="btn btn-primary mb-3">Crear nueva reparación</a>
+
+<table class="table table-bordered table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th>Código Reparación</th>
+            <th>Fecha</th>
+            <th>NIT</th>
+            <th>Nombre</th>
+            <th>Motocicleta</th>
+            <th>Mecánico</th>
+            <th>Convertido a venta</th>
+            <th>Código asignación permisos</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var reparacion in Model)
+        {
+            <tr>
+                <td>@reparacion.CodigoReparacion</td>
+                <td>@reparacion.Fecha.ToShortDateString()</td>
+                <td>@reparacion.Nit</td>
+                <td>@reparacion.Nombre</td>
+                <td>@reparacion.Motocicleta</td>
+                <td>@reparacion.Mecanico</td>
+                <td>@(reparacion.ConvertidoAVenta ? "Sí" : "No")</td>
+                <td>@reparacion.Codigoasignacionpermisos</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+}

@@ -1,0 +1,32 @@
+﻿@model Usuario
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card mt-5">
+                <div class="card-body">
+                    <h1 class="card-title text-center mb-4">Inicio de sesión</h1>
+                    <form method="post" asp-action="Login" asp-controller="Login">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" required asp-for="User" />
+                            <label for="floatingInput">Usuario</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" required asp-for="Contraseña" />
+                            <label for="floatingPassword">Contraseña</label>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">Ingresar</button>
+                        </div>
+                        @if(!string.IsNullOrEmpty(ViewBag.Error))
+                        {
+                            <div class="alert alert-danger mt-3" role="alert">@ViewBag.Error</div>
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
