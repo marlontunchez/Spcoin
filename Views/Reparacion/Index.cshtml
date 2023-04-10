@@ -96,8 +96,9 @@ function guardarReparacion() {
     url: '@Url.Action("Create", "Reparacion")',
     data: formData,
     success: function(data) {
-      // Cierra el modal y recarga la página después de enviar la petición
+      // Cierra el modal después de enviar la petición
       $('#Create').modal('hide');
+      // Recarga la página después de cerrar el modal
       location.reload();
     },
     error: function(xhr, status, error) {
@@ -106,4 +107,6 @@ function guardarReparacion() {
     }
   });
 }
+
+
 </script>
