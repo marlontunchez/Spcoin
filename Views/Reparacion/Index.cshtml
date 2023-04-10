@@ -47,7 +47,6 @@ else
     </table>
 }
 
-
 <div class="modal fade" id="Create" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -57,7 +56,7 @@ else
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form id="reparacion-form" action="@Url.Action("Create", "Reparacion")" method="post">
+      <form id="reparacion-form">
         <div class="modal-body">
           <div class="form-group">
             <label for="motocicleta">Motocicleta</label>
@@ -70,7 +69,7 @@ else
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="cerrarModal()">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Aceptar</button>
+          <button type="button" class="btn btn-primary" onclick="guardarReparacion()">Aceptar</button>
         </div>
       </form>
     </div>
@@ -84,5 +83,27 @@ function mostrarModal() {
 }
 function cerrarModal() {
   $('#Create').modal('hide');
+}
+
+function guardarReparacion() {
+  var formData = {
+    'motocicleta': $('#motocicleta').val(),
+    'mecanico': $('#mecanico').val()
+  };
+  
+  $.ajax({
+    type: 'POST',
+    url: '@Url.Action("Create", "Reparacion")',
+    data: formData,
+    success: function(data) {
+      // Cierra el modal y recarga la página después de enviar la petición
+      $('#Create').modal('hide');
+      location.reload();
+    },
+    error: function(xhr, status, error) {
+      // En caso de error, muestra el mensaje de error en la consola.
+      console.error(error);
+    }
+  });
 }
 </script>

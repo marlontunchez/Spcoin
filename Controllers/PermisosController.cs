@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 
 namespace SPCOIN.Controllers
@@ -12,7 +13,9 @@ namespace SPCOIN.Controllers
         }
         public ActionResult Permisos(int codigoasignacionpermisos)
         {
+            //HttpContext.Session.SetInt32("CODIGOASIGNACIONPERMISOS", codigoasignacionpermisos);
             //HttpContext.Items["CodigoA"] = codigoasignacionpermisos;
+            Session["codigo"] = codigoasignacionpermisos;
             TempData["CODIGOASIGNACIONPERMISOS"] = codigoasignacionpermisos ;        
             return RedirectToAction("index", "home");
             // Código adicional

@@ -25,7 +25,7 @@ namespace SPCOIN.Controllers
                     {
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
                         cmd.Parameters.Add("@BUSCAR", System.Data.SqlDbType.VarChar).Value = "";
-                        cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = Convert.ToInt32(TempData["CODIGOASIGNACIONPERMISOS"]);
+                        cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = HttpContext.Session.GetInt32("CODIGOASIGNACIONPERMISOS");
                         //cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = Convert.ToInt32(HttpContext.Items["CODIGOASIGNACIONPERMISOS"]);
                         con.Open();
                         using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
@@ -59,12 +59,38 @@ namespace SPCOIN.Controllers
 
 
         [AllowAnonymous]
-        public IActionResult Create()
+
+        public async Task<IActionResult> Create(Reparacion u)
         {
-            
-            return View();
+            try
+            {
+                using (SqlConnection con = new(_context.Conexion))
+                {
+                    using (SqlCommand cmd = new("IREPARACION", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@CODIGOCLIENTE", System.Data.SqlDbType.BigInt).Value = 1;
+                        cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = 1;
+
+                        cmd.Parameters.Add("@MOTOCICLETA", System.Data.SqlDbType.VarChar).Value = u.Motocicleta ;
+                        cmd.Parameters.Add("@MECANICO", System.Data.SqlDbType.VarChar).Value = u.Mecanico;
+                        con.Open();
+                        cmd.ExecuteNonQuery(); // Ejecutar el comando                        
+                    }
+                    con.Close();
+
+
+                }
+                return View();
+
+            }
+            catch (System.Exception e)
+            {
+                ViewBag.Error = e.Message;
+                return View();
+            }
         }
-       
+
 
 
 
