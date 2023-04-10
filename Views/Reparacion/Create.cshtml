@@ -1,25 +1,15 @@
 ﻿@model Reparacion
 
-@{
-    ViewData["Title"] = "Crear nueva reparación";
-}
+<h1>Crear nueva reparación</h1>
 
-<h1>@ViewData["Title"]</h1>
-
-<form asp-action="Create">
+<form method="post" asp-action="Create">
     <div class="form-group">
         <label asp-for="Motocicleta" class="control-label"></label>
         <input asp-for="Motocicleta" class="form-control" />
-        <span asp-validation-for="Motocicleta" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Mecanico" class="control-label"></label>
         <input asp-for="Mecanico" class="form-control" />
-        <span asp-validation-for="Mecanico" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Crear</button>
+    <button type="submit" class="btn btn-primary">Guardar</button>
 </form>
-
-@*@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}*@

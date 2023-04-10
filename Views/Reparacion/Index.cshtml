@@ -6,7 +6,9 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<a href="@Url.Action("Create", "Reparacion")" class="btn btn-primary mb-3">Crear nueva reparación</a>
+@*<a href="@Url.Action("Create", "Reparacion")" class="btn btn-primary mb-3">Crear nueva reparación</a>*@
+@*<a id="idCreaReparacion" class="btn btn-primary mb-3">Crear nueva reparación</a>*@
+<button type="button" class="btn btn-primary" onclick="mostrarModal()">Crear Reparacion</button>
 
 @if (Model == null || !Model.Any())
 {
@@ -14,38 +16,73 @@
 }
 else
 {
-<table class="table table-bordered table-hover">
-    <thead class="thead-dark">
-        <tr>
-            <th>Código Reparación</th>
-            <th>Fecha</th>
-            <th>NIT</th>
-            <th>Nombre</th>
-            <th>Motocicleta</th>
-            <th>Mecánico</th>
-            <th>Convertido a venta</th>
-            <th>Código asignación permisos</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var reparacion in Model)
-        {
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
             <tr>
-                <td>@reparacion.CodigoReparacion</td>
-                <td>@reparacion.Fecha.ToShortDateString()</td>
-                <td>@reparacion.Nit</td>
-                <td>@reparacion.Nombre</td>
-                <td>@reparacion.Motocicleta</td>
-                <td>@reparacion.Mecanico</td>
-                <td>@(reparacion.ConvertidoAVenta ? "Sí" : "No")</td>
-                <td>@reparacion.Codigoasignacionpermisos</td>
+                <th>Código Reparación</th>
+                <th>Fecha</th>
+                <th>NIT</th>
+                <th>Nombre</th>
+                <th>Motocicleta</th>
+                <th>Mecánico</th>
+                <th>Convertido a venta</th>
+                <th>Código asignación permisos</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var reparacion in Model)
+            {
+                <tr>
+                    <td>@reparacion.CodigoReparacion</td>
+                    <td>@reparacion.Fecha.ToShortDateString()</td>
+                    <td>@reparacion.Nit</td>
+                    <td>@reparacion.Nombre</td>
+                    <td>@reparacion.Motocicleta</td>
+                    <td>@reparacion.Mecanico</td>
+                    <td>@(reparacion.ConvertidoAVenta ? "Sí" : "No")</td>
+                    <td>@reparacion.Codigoasignacionpermisos</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
-@section Scripts {
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<div class="modal fade" id="Create" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Crear Reparación</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="cerrarModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form id="reparacion-form" action="@Url.Action("Create", "Reparacion")" method="post">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="motocicleta">Motocicleta</label>
+            <input type="text" class="form-control" id="motocicleta" name="motocicleta" required>
+          </div>
+          <div class="form-group">
+            <label for="mecanico">Mecánico</label>
+            <input type="text" class="form-control" id="mecanico" name="mecanico" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="cerrarModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Aceptar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function mostrarModal() {
+  $('#Create').modal('show');
+
 }
+function cerrarModal() {
+  $('#Create').modal('hide');
+}
+</script>

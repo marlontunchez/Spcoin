@@ -17,13 +17,11 @@
         <tbody>
             @foreach (var row in Model)
             {
-                <tr onclick="location.href='@Url.Action("Permisos", "Permisos", new { CodigoAsignacionPermisos = row.CodigoAsignacionPermisos })'">
-=======
-             
+                <tr class="table-row-link" data-href="@Url.Action("Permisos", "Permisos", new { CodigoAsignacionPermisos = row.CodigoAsignacionPermisos })">
                     <td class="d-none">@row.CodigoAsignacionPermisos</td>
                     <td class="d-none">@row.CodigoSucursal</td>
-                    <td>@row.Nombre</td>
-                    <td>@row.Direccion</td>
+                    <td style="font-size: 16px">@row.Nombre</td>
+                    <td style="font-size: 16px">@row.Direccion</td>
                 </tr>
             }
         </tbody>
@@ -33,4 +31,11 @@
 @section Scripts {
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.table-row-link').on('click', function () {
+                window.location.href = $(this).data('href');
+            });
+        });
+    </script>
 }
