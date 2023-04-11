@@ -24,7 +24,7 @@ namespace SPCOIN.Controllers
                     using (SqlCommand cmd = new SqlCommand("SUCURSALESPERMITIDASALUSUARIO", con))
                     {
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                        cmd.Parameters.Add("@CODIGOUSUARIO", System.Data.SqlDbType.Int).Value = codigoUsuario;
+                        cmd.Parameters.Add("@CODIGOUSUARIO", System.Data.SqlDbType.Int).Value = HttpContext.Session.GetInt32("CODIGOUSUARIO");
                         con.Open();
                         using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
                         {

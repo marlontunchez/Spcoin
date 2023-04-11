@@ -44,7 +44,8 @@ namespace SPCOIN.Controllers
                         cmd.ExecuteNonQuery(); // Ejecutar el comando                        
                         int codigousuario = codigousuarioParam.Value == DBNull.Value ? 0 : (int)codigousuarioParam.Value; // Validar si es nulo y asignar cero en su lugar
                         TempData["codigousuario"] = codigousuario;
-                        if (Convert.ToUInt32(TempData["codigousuario"].ToString()) > 0)
+                        HttpContext.Session.SetInt32("CODIGOUSUARIO", codigousuario);
+                        if (codigousuario > 0)
                         {
                             List<Claim> c = new List<Claim>();
                             {
