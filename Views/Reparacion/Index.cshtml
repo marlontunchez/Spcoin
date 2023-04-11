@@ -16,7 +16,52 @@
 }
 else
 {
-<div class="table-responsive">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Código Reparación</th>
+                    <th>Fecha</th>
+                    <th>NIT</th>
+                    <th>Nombre</th>
+                    <th>Motocicleta</th>
+                    <th>Mecánico</th>
+                    <th>Convertido a venta</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var reparacion in Model)
+                {
+                    <tr>
+                        <td>@reparacion.CodigoReparacion</td>
+                        <td>@reparacion.Fecha.ToShortDateString()</td>
+                        <td>@reparacion.Nit</td>
+                        <td>@reparacion.Nombre</td>
+                        <td>@reparacion.Motocicleta</td>
+                        <td>@reparacion.Mecanico</td>
+                        <td>@(reparacion.ConvertidoAVenta ? "Sí" : "No")</td>
+                        <td>
+                        <a href="@Url.Action("Eliminar", "Reparacion", new { codigo = reparacion.CodigoReparacion })" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+<a href="@Url.Action("AgregarDetalle", "Reparacion", new { codigo = reparacion.CodigoReparacion })" class="btn btn-info btn-sm"><i class="fa fa-plus"></i></a>
+<a href="@Url.Action("ConvertirAVenta", "Reparacion", new { codigo = reparacion.CodigoReparacion })" class="btn btn-success btn-sm"><i class="fa fa-check"></i></a>
+    
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="8">No se encontraron reparaciones</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+
+@*<div class="table-responsive">
     <table class="table table-bordered table-hover table-striped">
         <thead class="thead-dark">
             <tr>
@@ -45,7 +90,7 @@ else
         </tbody>
     </table>
 </div>
-
+*@
 }
 <div class="modal fade" id="Create" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
