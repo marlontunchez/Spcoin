@@ -45,9 +45,11 @@ else
                         <td>@reparacion.Mecanico</td>
                         <td>@(reparacion.ConvertidoAVenta ? "Sí" : "No")</td>
                         <td>
-                       <button type="button" class="btn btn-danger btn-lg" onclick="EliminarModal()" title="Eliminar" data-codigoreparacion="{{codigoreparacion}}"></button>
-                       <button type="button" class="btn btn-primary btn-lg" onclick="mostrarDetale()" title="Ver detalle"></button>
-                     <button type="button" class="btn btn-success btn-lg" id="convertirBtn" onclick="mostrarConvertir()"title="Convertir a venta">Convertir</button>
+                    <button type="button" class="btn btn-danger btn-lg eliminarBtn" data-codigo-reparacion="@reparacion.CodigoReparacion" title="Eliminar reparación">Eliminar</button>
+
+                            <button type="button" class="btn btn-primary btn-lg" onclick="mostrarDetale()" title="Ver detalle"></button>
+                     <button type="button" class="btn btn-success btn-lg" id="convertirBtn" data-codigo-reparacion="@reparacion.CodigoReparacion"  onclick="mostrarConvertir()" title="Convertir a venta">Convertir</button>
+
 
               </td>
                     </tr>
@@ -113,7 +115,7 @@ else
   </div>
 </div>
 
-<div class="modal fade" id="Convertir" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -121,15 +123,20 @@ else
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        ¿Estás seguro que deseas convertir la reparación en una venta?
+        ¿Estás seguro que deseas eliminar la reparación?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" id="confirmarBtn">Convertir</button>
+        <button type="button" class="btn btn-primary" id="confirmarEliminarBtn" data-dismiss="modal">Eliminar</button>
+        <input type="hidden" id="codigoReparacionEliminar">
       </div>
     </div>
   </div>
 </div>
+
+
+
+
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -184,9 +191,11 @@ function mostrarModal() {
 function mostrarDetale() {
   $('#Detalle').modal('show');
   }
-  function mostrarConvertir() {
-  $('#Convertir').modal('show');
-  }
+  //function mostrarConvertir() {
+  //$('#Convertir').modal('show');
+  //}
+
+
 function cerrarModal() {
   $('#Create').modal('hide');
 }
@@ -219,13 +228,26 @@ function guardarReparacion() {
 
 
 $(document).ready(function() {
-  $('#confirmarBtn').click(function() {
+  $('.eliminarBtn').click(function() {
+    var codigoReparacion = $(this).data('codigo-reparacion');
+    console.log(codigoReparacion); // Agregamos el console.log para mostrar el valor de codigoreparacion
+    $('#eliminarModal').modal('show');
+    $('#codigoReparacionEliminar').val(codigoReparacion);
+  });
+});
+
+$(document).ready(function() {
+  $('#confirmarEliminarBtn').click(function() {
+    var codigoReparacion = $('#codigoReparacionEliminar').val();
+    console.log('Código de reparación a eliminar: ' + codigoReparacion); // Muestra el código de reparación en la consola
     $.ajax({
-      type: 'POST',
-      url: '@Url.Action("Convertir", "Reparacion")',
+      type: 'DELETE',
+      url: '@Url.Action("Delete", "Reparacion")',
+      data: {codigoReparacion: codigoReparacion},
       success: function(data) {
+        console.log('Reparación eliminada correctamente'); // Muestra un mensaje de éxito en la consola
         // Cierra el modal después de enviar la petición
-        $('#confirmacionModal').modal('hide');
+        $('#eliminarModal').modal('hide');
         // Recarga la página después de cerrar el modal
         location.reload();
       },
@@ -236,42 +258,6 @@ $(document).ready(function() {
     });
   });
 });
-
-
-
-function EliminarModal(codigoReparacion) {
-  $('#Eliminar').modal('show');
-  $("#eliminarBtn").on("click", function() {
-    EliminarReparacion(codigoReparacion);
-  });
-}
-
-function CerrarEliminar() {
-  $('#Eliminar').modal('hide');
-}
-
-function EliminaModal(btnEliminar) {
-  var codigoReparacion = btnEliminar.dataset.codigoreparacion;
-  // Resto del código...
-  $("#eliminarBtn").on("click", function() {
-    EliminarReparacion(codigoReparacion);
-  });
-}
-
-function EliminarReparacion(codigoReparacion) {
-  $.ajax({
-    url: "reparacion/delete/" + codigoReparacion,
-    type: "POST",
-    data: { codigo_reparacion: codigoReparacion },
-    success: function(response) {
-      // Resto del código...
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-      // Resto del código...
-    }
-  });
-}
-
 
 
 </script>
