@@ -2,6 +2,7 @@
 @model List<Reparacion>
 
 
+
 @{
     ViewData["Title"] = "Reparaciones";
 }
@@ -46,8 +47,8 @@ else
                         <td>
                        <button type="button" class="btn btn-danger btn-lg" onclick="EliminarModal()" title="Eliminar" data-codigoreparacion="{{codigoreparacion}}"></button>
                        <button type="button" class="btn btn-primary btn-lg" onclick="mostrarDetale()" title="Ver detalle"></button>
-                       <button type="button" class="btn btn-success btn-lg" onclick="ConvertirVenta()" title="Convertir a venta"></button>
-            
+                     <button type="button" class="btn btn-success btn-lg" id="convertirBtn" onclick="mostrarConvertir()"title="Convertir a venta">Convertir</button>
+
               </td>
                     </tr>
                 }
@@ -62,38 +63,6 @@ else
     </div>
 }
 
-
-@*<div class="table-responsive">
-    <table class="table table-bordered table-hover table-striped">
-        <thead class="thead-dark">
-            <tr>
-                <th>Código Reparación</th>
-                <th>Fecha</th>
-                <th>NIT</th>
-                <th>Nombre</th>
-                <th>Motocicleta</th>
-                <th>Mecánico</th>
-                <th>Convertido a venta</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var reparacion in Model)
-            {
-                <tr>
-                    <td>@reparacion.CodigoReparacion</td>
-                    <td>@reparacion.Fecha.ToShortDateString()</td>
-                    <td>@reparacion.Nit</td>
-                    <td>@reparacion.Nombre</td>
-                    <td>@reparacion.Motocicleta</td>
-                    <td>@reparacion.Mecanico</td>
-                    <td>@(reparacion.ConvertidoAVenta ? "Sí" : "No")</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-*@
-}
 <div class="modal fade" id="Create" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -144,27 +113,69 @@ else
   </div>
 </div>
 
-
-
-
-<div class="modal fade" id="Detalle" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLiveLabel" aria-hidden="true" style="display: none;">
+<div class="modal fade" id="Convertir" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLiveLabel">Modal title</h1>
+        <h5 class="modal-title" id="exampleModalLabel">Confirmación</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>I will not close if you click outside of me. Don't even try to press escape key.</p>
+        ¿Estás seguro que deseas convertir la reparación en una venta?
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="confirmarBtn">Convertir</button>
       </div>
     </div>
   </div>
 </div>
 
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<@*div class="modal fade" id="Detalle" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLiveLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLiveLabel">Detalle de reparación</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Código de detalle</th>
+              <th>Código de producto</th>
+              <th>Nombre</th>
+              <th>Unidades</th>
+              <th>Precio</th>
+              <th>Total</th>
+              <th>Descuento</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var detalle in Model.DetallesReparacion)
+            {
+              <tr>
+                <td>@detalle.CodigoDetalleReparacion</td>
+                <td>@detalle.CodigoProducto</td>
+                <td>@detalle.Nombre</td>
+                <td>@detalle.Unidades</td>
+                <td>@detalle.Precio</td>
+                <td>@detalle.Total</td>
+                <td>@detalle.Descuento</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+*@
 <script>
 function mostrarModal() {
   $('#Create').modal('show');
@@ -172,8 +183,10 @@ function mostrarModal() {
 }
 function mostrarDetale() {
   $('#Detalle').modal('show');
-
-}
+  }
+  function mostrarConvertir() {
+  $('#Convertir').modal('show');
+  }
 function cerrarModal() {
   $('#Create').modal('hide');
 }
@@ -203,6 +216,28 @@ function guardarReparacion() {
     }
   });
 }
+
+
+$(document).ready(function() {
+  $('#confirmarBtn').click(function() {
+    $.ajax({
+      type: 'POST',
+      url: '@Url.Action("Convertir", "Reparacion")',
+      success: function(data) {
+        // Cierra el modal después de enviar la petición
+        $('#confirmacionModal').modal('hide');
+        // Recarga la página después de cerrar el modal
+        location.reload();
+      },
+      error: function(xhr, status, error) {
+        // En caso de error, muestra el mensaje de error en la consola.
+        console.error(error);
+      }
+    });
+  });
+});
+
+
 
 function EliminarModal(codigoReparacion) {
   $('#Eliminar').modal('show');

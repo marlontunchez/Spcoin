@@ -92,7 +92,39 @@ namespace SPCOIN.Controllers
 
 
 
-       
+     
+        public async Task<IActionResult> Convertir(Reparacion r)
+        {
+            try
+            {
+                using (SqlConnection con = new(_context.Conexion))
+                {
+                    using (SqlCommand cmd = new("FCONVIERTEREPARACIONAVENTA", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@CODIGOREPARACION", System.Data.SqlDbType.BigInt).Value = r.CodigoReparacion;
+                       con.Open();
+                        cmd.ExecuteNonQuery(); // Ejecutar el comando
+                                               // 
+                        Console.WriteLine(r.CodigoReparacion);
+                    }
+                    con.Close();
+
+
+                }
+                return Json(new { success = true }); ;
+
+            }
+            catch (System.Exception e)
+            {
+                ViewBag.Error = e.Message;
+                return Json(new { success = false }); ;
+  
+            }
+        }
+
+
+
         [HttpDelete]
         public async Task<IActionResult> Delete(int codigoReparacion)
         {
