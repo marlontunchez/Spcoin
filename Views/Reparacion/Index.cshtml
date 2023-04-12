@@ -1,10 +1,12 @@
-﻿@model List<Reparacion>
+﻿@using System.Text.Json
+@model List<Reparacion>
+
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Reparaciones";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1>Reparaciones Activas</h1>
 
 @*<a href="@Url.Action("Create", "Reparacion")" class="btn btn-primary mb-3">Crear nueva reparación</a>*@
 @*<a id="idCreaReparacion" class="btn btn-primary mb-3">Crear nueva reparación</a>*@
@@ -42,11 +44,11 @@ else
                         <td>@reparacion.Mecanico</td>
                         <td>@(reparacion.ConvertidoAVenta ? "Sí" : "No")</td>
                         <td>
-                        <a href="@Url.Action("Eliminar", "Reparacion", new { codigo = reparacion.CodigoReparacion })" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
-<a href="@Url.Action("AgregarDetalle", "Reparacion", new { codigo = reparacion.CodigoReparacion })" class="btn btn-info btn-sm"><i class="fa fa-plus"></i></a>
-<a href="@Url.Action("ConvertirAVenta", "Reparacion", new { codigo = reparacion.CodigoReparacion })" class="btn btn-success btn-sm"><i class="fa fa-check"></i></a>
-    
-                        </td>
+                       <button type="button" class="btn btn-danger btn-lg" onclick="EliminarModal()" title="Eliminar" data-codigoreparacion="{{codigoreparacion}}"></button>
+                       <button type="button" class="btn btn-primary btn-lg" onclick="mostrarDetale()" title="Ver detalle"></button>
+                       <button type="button" class="btn btn-success btn-lg" onclick="ConvertirVenta()" title="Convertir a venta"></button>
+            
+              </td>
                     </tr>
                 }
                 @if (!Model.Any())
@@ -121,13 +123,62 @@ else
   </div>
 </div>
 
+<div class="modal fade" id="Eliminar" tabindex="-1" role="dialog" aria-labelledby="confirmarEliminacionModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmarEliminacionModalLabel">Confirmar eliminación</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" onclick="CerrarEliminar()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que deseas eliminar este elemento?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="CerrarEliminar()">Cancelar</button>
+<button type="button" class="btn btn-danger" onclick="EliminaModal(event)" data-codigoreparacion="{{codigoreparacion}}">Eliminar</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" id="Detalle" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLiveLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLiveLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>I will not close if you click outside of me. Don't even try to press escape key.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 function mostrarModal() {
   $('#Create').modal('show');
 
 }
+function mostrarDetale() {
+  $('#Detalle').modal('show');
+
+}
 function cerrarModal() {
   $('#Create').modal('hide');
+}
+function cerrarDetalle() {
+  $('#Detalle').modal('hide');
 }
 
 function guardarReparacion() {
@@ -152,6 +203,40 @@ function guardarReparacion() {
     }
   });
 }
+
+function EliminarModal(codigoReparacion) {
+  $('#Eliminar').modal('show');
+  $("#eliminarBtn").on("click", function() {
+    EliminarReparacion(codigoReparacion);
+  });
+}
+
+function CerrarEliminar() {
+  $('#Eliminar').modal('hide');
+}
+
+function EliminaModal(btnEliminar) {
+  var codigoReparacion = btnEliminar.dataset.codigoreparacion;
+  // Resto del código...
+  $("#eliminarBtn").on("click", function() {
+    EliminarReparacion(codigoReparacion);
+  });
+}
+
+function EliminarReparacion(codigoReparacion) {
+  $.ajax({
+    url: "reparacion/delete/" + codigoReparacion,
+    type: "POST",
+    data: { codigo_reparacion: codigoReparacion },
+    success: function(response) {
+      // Resto del código...
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      // Resto del código...
+    }
+  });
+}
+
 
 
 </script>
