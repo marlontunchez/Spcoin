@@ -1,19 +1,14 @@
 ﻿@using System.Text.Json
 @model List<Reparacion>
-
-
-
 @{
     ViewData["Title"] = "Reparaciones";
 }
-
 <h1>Reparaciones Activas</h1>
 <br>
 @*<a href="@Url.Action("Create", "Reparacion")" class="btn btn-primary mb-3">Crear nueva reparación</a>*@
 @*<a id="idCreaReparacion" class="btn btn-primary mb-3">Crear nueva reparación</a>*@
 <button type="button" class="btn btn-primary" onclick="mostrarModal()">Crear Reparacion</button>
 <br><br>
-
 @if (Model == null || !Model.Any())
 {
     <div>No se encontraron reparaciones</div>
@@ -47,10 +42,9 @@ else
                         <td>@(reparacion.ConvertidoAVenta ? "Sí" : "No")</td>
                         <td>
                     <button type="button" class="btn btn-danger btn-lg eliminarBtn"  data-codigo-reparacion="@reparacion.CodigoReparacion" title="Eliminar reparación"></button>
-                    <button type="button" class="btn btn-primary btn-lg" data-codigo-reparacion="@reparacion.CodigoReparacion" title="Ver Detalle"></button>
-                    <button type="button" class="btn btn-success btn-lg convertirBtn"  data-codigo-reparacion="@reparacion.CodigoReparacion" title="Convertir a Venta"></button>
-                  
-
+                    <button type="button" class="btn btn-primary btn-lg" data-codigo-reparacion="@reparacion.CodigoReparacion" ></button>
+                    <button type="button" class="btn btn-primary btn-lg convertirBtn"  data-codigo-reparacion="@reparacion.CodigoReparacion" >Convertir</button>
+                    <button type="button" class="btn btn-primary btn-lg convertirBtn"  data-codigo-reparacion="@reparacion.CodigoReparacion" ></button>
 
 
 
@@ -67,7 +61,6 @@ else
         </table>
     </div>
 }
-
 <div class="modal fade" id="Create" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -96,8 +89,6 @@ else
     </div>
   </div>
 </div>
-
-
 <div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -116,7 +107,6 @@ else
     </div>
   </div>
 </div>
-
 <div class="modal fade" id="convertirModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -135,14 +125,6 @@ else
     </div>
   </div>
 </div>
-
-
-
-
-
-
-
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <@*div class="modal fade" id="Detalle" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLiveLabel" aria-hidden="true" style="display: none;">
   <div class="modal-dialog">
@@ -190,7 +172,6 @@ else
 <script>
 function mostrarModal() {
   $('#Create').modal('show');
-
 }
 function mostrarDetale() {
   $('#Detalle').modal('show');
@@ -226,15 +207,30 @@ function convertirReparacion() {
     }
   });
 }
-
-
 function cerrarModal() {
   $('#Create').modal('hide');
 }
 function cerrarDetalle() {
   $('#Detalle').modal('hide');
 }
-
+$(document).ready(function() {
+  $('#confirmarConvertirBtn').click(function() {
+    var codigoReparacion = $('#codigoReparacionConvertir').val();
+    console.log('Código de reparación a convertir: ' + codigoReparacion);
+    $.ajax({
+      type: 'POST',
+      url: '@Url.Action("Convertir", "Reparacion")',
+      data: {codigoReparacion: codigoReparacion},
+      success: function(data) {
+        console.log('Reparación convertida a venta correctamente');
+        location.reload();
+      },
+      error: function(xhr, status, error) {
+        console.error(error);
+      }
+    });
+  });
+});
 function guardarReparacion() {
   var formData = {
     'motocicleta': $('#motocicleta').val(),
@@ -257,10 +253,6 @@ function guardarReparacion() {
     }
   });
 }
-
-
-
-
 $(document).ready(function() {
   $('.eliminarBtn').click(function() {
     var codigoReparacion = $(this).data('codigo-reparacion');
@@ -268,8 +260,8 @@ $(document).ready(function() {
     $('#eliminarModal').modal('show');
     $('#codigoReparacionEliminar').val(codigoReparacion);
   });
-
-
+});
+$(document).ready(function() {
   $('#confirmarEliminarBtn').click(function() {
     var codigoReparacion = $('#codigoReparacionEliminar').val();
     console.log('Código de reparación a eliminar: ' + codigoReparacion); // Muestra el código de reparación en la consola
@@ -290,15 +282,43 @@ $(document).ready(function() {
       }
     });
   });
-
+});
+$(document).ready(function() {
+  $('.convertirBtn').click(function() {
+  $('.eliminarBtn').click(function() {
+    var codigoReparacion = $(this).data('codigo-reparacion');
+    console.log(codigoReparacion); // Agregamos el console.log para mostrar el valor de codigoreparacion
+    $('#eliminarModal').modal('show');
+    $('#codigoReparacionEliminar').val(codigoReparacion);
+  });
+  $('#confirmarEliminarBtn').click(function() {
+    var codigoReparacion = $('#codigoReparacionEliminar').val();
+    console.log('Código de reparación a eliminar: ' + codigoReparacion); // Muestra el código de reparación en la consola
+    $.ajax({
+      type: 'DELETE',
+      url: '@Url.Action("Delete", "Reparacion")',
+      data: {codigoReparacion: codigoReparacion},
+      success: function(data) {
+        console.log('Reparación eliminada correctamente'); // Muestra un mensaje de éxito en la consola
+        // Cierra el modal después de enviar la petición
+        $('#eliminarModal').modal('hide');
+        // Recarga la página después de cerrar el modal
+        location.reload();
+      },
+      error: function(xhr, status, error) {
+        // En caso de error, muestra el mensaje de error en la consola.
+        console.error(error);
+      }
+    });
+  });
     $('.convertirBtn').click(function() {
     var codigoReparacion = $(this).data('codigo-reparacion');
     console.log(codigoReparacion);
     $('#convertirModal').modal('show');
     $('#codigoReparacionConvertir').val(codigoReparacion);
   });
-
-
+});
+$(document).ready(function() {
   $('#confirmarConvertirBtn').click(function() {
     var codigoReparacion = $('#codigoReparacionConvertir').val();
     console.log('Código de reparación a convertir: ' + codigoReparacion);
@@ -317,4 +337,3 @@ $(document).ready(function() {
     });
   });
 });
-</script>
