@@ -8,10 +8,11 @@
 }
 
 <h1>Reparaciones Activas</h1>
-
+<br>
 @*<a href="@Url.Action("Create", "Reparacion")" class="btn btn-primary mb-3">Crear nueva reparación</a>*@
 @*<a id="idCreaReparacion" class="btn btn-primary mb-3">Crear nueva reparación</a>*@
 <button type="button" class="btn btn-primary" onclick="mostrarModal()">Crear Reparacion</button>
+<br><br>
 
 @if (Model == null || !Model.Any())
 {
@@ -45,10 +46,12 @@ else
                         <td>@reparacion.Mecanico</td>
                         <td>@(reparacion.ConvertidoAVenta ? "Sí" : "No")</td>
                         <td>
-                    <button type="button" class="btn btn-danger btn-lg eliminarBtn" data-codigo-reparacion="@reparacion.CodigoReparacion" title="Eliminar reparación">Eliminar</button>
+                    <button type="button" class="btn btn-danger btn-lg eliminarBtn"  data-codigo-reparacion="@reparacion.CodigoReparacion" title="Eliminar reparación"></button>
+                    <button type="button" class="btn btn-primary btn-lg" data-codigo-reparacion="@reparacion.CodigoReparacion" ></button>
+                    <button type="button" class="btn btn-primary btn-lg convertirBtn"  data-codigo-reparacion="@reparacion.CodigoReparacion" >Convertir</button>
+                  
 
-                            <button type="button" class="btn btn-primary btn-lg" onclick="mostrarDetale()" title="Ver detalle"></button>
-                     <button type="button" class="btn btn-success btn-lg" id="convertirBtn" data-codigo-reparacion="@reparacion.CodigoReparacion"  onclick="mostrarConvertir()" title="Convertir a venta">Convertir</button>
+
 
 
               </td>
@@ -94,26 +97,6 @@ else
   </div>
 </div>
 
-<div class="modal fade" id="Eliminar" tabindex="-1" role="dialog" aria-labelledby="confirmarEliminacionModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="confirmarEliminacionModalLabel">Confirmar eliminación</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" onclick="CerrarEliminar()">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        ¿Estás seguro de que deseas eliminar este elemento?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="CerrarEliminar()">Cancelar</button>
-<button type="button" class="btn btn-danger" onclick="EliminaModal(event)" data-codigoreparacion="{{codigoreparacion}}">Eliminar</button>
-
-      </div>
-    </div>
-  </div>
-</div>
 
 <div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -133,6 +116,27 @@ else
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="convertirModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirmación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro que deseas convertir la reparación en una orden de servicio?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="confirmarConvertirBtn" data-dismiss="modal">Convertir</button>
+        <input type="hidden" id="codigoReparacionConvertir">
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 
 
@@ -194,6 +198,34 @@ function mostrarDetale() {
   //function mostrarConvertir() {
   //$('#Convertir').modal('show');
   //}
+  function mostrarConvertir() {
+  var codigoReparacion = $('#convertirBtn').data('codigo-reparacion');
+  console.log('Código de reparación a convertir: ' + codigoReparacion);
+  $('#convertirModal').modal('show');
+  $('#codigoReparacionConvertir').val(codigoReparacion);
+}
+function convertirReparacion() {
+  var codigoReparacion = $('#codigoReparacionConvertir').val();
+  console.log('Código de reparación a convertir: ' + codigoReparacion);
+  $.ajax({
+    type: 'POST',
+    url: '/reparacion/convertir',
+    data: { codigoReparacion: codigoReparacion },
+    success: function(response) {
+      console.log(response);
+      if (response.success) {
+        alert('La reparación se ha convertido en orden de trabajo correctamente.');
+        window.location.reload();
+      } else {
+        alert('No se ha podido convertir la reparación en orden de trabajo.');
+      }
+    },
+    error: function(xhr, status, error) {
+      console.log(xhr.responseText);
+      alert('Ha ocurrido un error al intentar convertir la reparación en orden de trabajo.');
+    }
+  });
+}
 
 
 function cerrarModal() {
@@ -202,6 +234,26 @@ function cerrarModal() {
 function cerrarDetalle() {
   $('#Detalle').modal('hide');
 }
+
+
+$(document).ready(function() {
+  $('#confirmarConvertirBtn').click(function() {
+    var codigoReparacion = $('#codigoReparacionConvertir').val();
+    console.log('Código de reparación a convertir: ' + codigoReparacion);
+    $.ajax({
+      type: 'POST',
+      url: '@Url.Action("Convertir", "Reparacion")',
+      data: {codigoReparacion: codigoReparacion},
+      success: function(data) {
+        console.log('Reparación convertida a venta correctamente');
+        location.reload();
+      },
+      error: function(xhr, status, error) {
+        console.error(error);
+      }
+    });
+  });
+});
 
 function guardarReparacion() {
   var formData = {
@@ -253,6 +305,35 @@ $(document).ready(function() {
       },
       error: function(xhr, status, error) {
         // En caso de error, muestra el mensaje de error en la consola.
+        console.error(error);
+      }
+    });
+  });
+});
+
+$(document).ready(function() {
+  $('.convertirBtn').click(function() {
+    var codigoReparacion = $(this).data('codigo-reparacion');
+    console.log(codigoReparacion);
+    $('#convertirModal').modal('show');
+    $('#codigoReparacionConvertir').val(codigoReparacion);
+  });
+});
+
+$(document).ready(function() {
+  $('#confirmarConvertirBtn').click(function() {
+    var codigoReparacion = $('#codigoReparacionConvertir').val();
+    console.log('Código de reparación a convertir: ' + codigoReparacion);
+    $.ajax({
+      type: 'POST',
+      url: '@Url.Action("Convertir", "Reparacion")',
+      data: {codigoReparacion: codigoReparacion},
+      success: function(data) {
+        console.log('Reparación convertida correctamente');
+        $('#convertirModal').modal('hide');
+        location.reload();
+      },
+      error: function(xhr, status, error) {
         console.error(error);
       }
     });
