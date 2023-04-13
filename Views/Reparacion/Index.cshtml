@@ -48,7 +48,7 @@ else
                         <td>
                     <button type="button" class="btn btn-danger btn-lg eliminarBtn"  data-codigo-reparacion="@reparacion.CodigoReparacion" title="Eliminar reparación"></button>
                     <button type="button" class="btn btn-primary btn-lg" data-codigo-reparacion="@reparacion.CodigoReparacion" ></button>
-                    <button type="button" class="btn btn-primary btn-lg convertirBtn"  data-codigo-reparacion="@reparacion.CodigoReparacion" >Convertir</button>
+                    <button type="button" class="btn btn-primary btn-lg convertirBtn"  data-codigo-reparacion="@reparacion.CodigoReparacion" ></button>
                   
 
 
@@ -235,26 +235,6 @@ function cerrarDetalle() {
   $('#Detalle').modal('hide');
 }
 
-
-$(document).ready(function() {
-  $('#confirmarConvertirBtn').click(function() {
-    var codigoReparacion = $('#codigoReparacionConvertir').val();
-    console.log('Código de reparación a convertir: ' + codigoReparacion);
-    $.ajax({
-      type: 'POST',
-      url: '@Url.Action("Convertir", "Reparacion")',
-      data: {codigoReparacion: codigoReparacion},
-      success: function(data) {
-        console.log('Reparación convertida a venta correctamente');
-        location.reload();
-      },
-      error: function(xhr, status, error) {
-        console.error(error);
-      }
-    });
-  });
-});
-
 function guardarReparacion() {
   var formData = {
     'motocicleta': $('#motocicleta').val(),
@@ -312,15 +292,43 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-  $('.convertirBtn').click(function() {
+  $('.eliminarBtn').click(function() {
+    var codigoReparacion = $(this).data('codigo-reparacion');
+    console.log(codigoReparacion); // Agregamos el console.log para mostrar el valor de codigoreparacion
+    $('#eliminarModal').modal('show');
+    $('#codigoReparacionEliminar').val(codigoReparacion);
+  });
+
+
+  $('#confirmarEliminarBtn').click(function() {
+    var codigoReparacion = $('#codigoReparacionEliminar').val();
+    console.log('Código de reparación a eliminar: ' + codigoReparacion); // Muestra el código de reparación en la consola
+    $.ajax({
+      type: 'DELETE',
+      url: '@Url.Action("Delete", "Reparacion")',
+      data: {codigoReparacion: codigoReparacion},
+      success: function(data) {
+        console.log('Reparación eliminada correctamente'); // Muestra un mensaje de éxito en la consola
+        // Cierra el modal después de enviar la petición
+        $('#eliminarModal').modal('hide');
+        // Recarga la página después de cerrar el modal
+        location.reload();
+      },
+      error: function(xhr, status, error) {
+        // En caso de error, muestra el mensaje de error en la consola.
+        console.error(error);
+      }
+    });
+  });
+
+    $('.convertirBtn').click(function() {
     var codigoReparacion = $(this).data('codigo-reparacion');
     console.log(codigoReparacion);
     $('#convertirModal').modal('show');
     $('#codigoReparacionConvertir').val(codigoReparacion);
   });
-});
 
-$(document).ready(function() {
+
   $('#confirmarConvertirBtn').click(function() {
     var codigoReparacion = $('#codigoReparacionConvertir').val();
     console.log('Código de reparación a convertir: ' + codigoReparacion);

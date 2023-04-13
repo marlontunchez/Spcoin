@@ -92,7 +92,8 @@ namespace SPCOIN.Controllers
 
 
 
-     
+
+        [HttpPost]
         public async Task<IActionResult> Convertir(Reparacion r)
         {
             try
