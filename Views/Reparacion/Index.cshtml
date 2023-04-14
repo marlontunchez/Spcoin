@@ -20,52 +20,52 @@
 }
 else
 {
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover table-striped">
-            <thead class="thead-dark">
+  
+    <div class="table-responsive" >
+ <table class="table table-bordered table-hover table-striped responsive-table blue" >
+
+        <thead class="thead-dark">
+            <tr>
+                <th>Código</th>
+                <th>Fecha</th>
+                <th>NIT</th>
+                <th>Nombre</th>
+                <th>Motocicleta</th>
+                <th>Mecánico</th>
+                <th>Convertido</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reparacion in Model)
+            {
                 <tr>
-                    <th>Código Reparación</th>
-                    <th>Fecha</th>
-                    <th>NIT</th>
-                    <th>Nombre</th>
-                    <th>Motocicleta</th>
-                    <th>Mecánico</th>
-                    <th>Convertido a venta</th>
-                    <th>Acciones</th>
+                    <td>@reparacion.CodigoReparacion</td>
+                    <td>@reparacion.Fecha.ToShortDateString()</td>
+                    <td>@reparacion.Nit</td>
+                    <td>@reparacion.Nombre</td>
+                    <td>@reparacion.Motocicleta</td>
+                    <td>@reparacion.Mecanico</td>
+                    <td>@(reparacion.ConvertidoAVenta ? "Sí" : "No")</td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-lg eliminarBtn" data-codigo-reparacion="@reparacion.CodigoReparacion" title="Eliminar reparación"></button>
+                        <button type="button" class="btn btn-primary btn-lg" data-codigo-reparacion="@reparacion.CodigoReparacion"></button>
+                        <button type="button" class="btn btn-success btn-lg convertirBtn" data-codigo-reparacion="@reparacion.CodigoReparacion"></button>
+                   </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var reparacion in Model)
-                {
-                    <tr>
-                        <td>@reparacion.CodigoReparacion</td>
-                        <td>@reparacion.Fecha.ToShortDateString()</td>
-                        <td>@reparacion.Nit</td>
-                        <td>@reparacion.Nombre</td>
-                        <td>@reparacion.Motocicleta</td>
-                        <td>@reparacion.Mecanico</td>
-                        <td>@(reparacion.ConvertidoAVenta ? "Sí" : "No")</td>
-                        <td>
-                    <button type="button" class="btn btn-danger btn-lg eliminarBtn"  data-codigo-reparacion="@reparacion.CodigoReparacion" title="Eliminar reparación"></button>
-                    <button type="button" class="btn btn-primary btn-lg" data-codigo-reparacion="@reparacion.CodigoReparacion" ></button>
-                    <button type="button" class="btn btn-success btn-lg convertirBtn"  data-codigo-reparacion="@reparacion.CodigoReparacion" ></button>
-                  
+            }
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="8">No se encontraron reparaciones</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 
 
-
-              </td>
-                    </tr>
-                }
-                @if (!Model.Any())
-                {
-                    <tr>
-                        <td colspan="8">No se encontraron reparaciones</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
 }
 
 <div class="modal fade" id="Create" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -99,7 +99,7 @@ else
 
 
 <div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Confirmación</h5>
@@ -118,14 +118,14 @@ else
 </div>
 
 <div class="modal fade" id="convertirModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Confirmación</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        ¿Estás seguro que deseas convertir la reparación en una orden de servicio?
+        ¿Estás seguro que deseas convertir la reparación en venta?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
