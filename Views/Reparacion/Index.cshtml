@@ -48,6 +48,7 @@ else
                     <td>@reparacion.Mecanico</td>
                     <td>@(reparacion.ConvertidoAVenta ? "Sí" : "No")</td>
                     <td>
+                   
                         <button type="button" class="btn btn-danger btn-lg eliminarBtn" data-codigo-reparacion="@reparacion.CodigoReparacion" title="Eliminar reparación"></button>
                         <button type="button" class="btn btn-primary btn-lg" data-codigo-reparacion="@reparacion.CodigoReparacion"></button>
                         <button type="button" class="btn btn-success btn-lg convertirBtn" data-codigo-reparacion="@reparacion.CodigoReparacion"></button>
@@ -137,56 +138,33 @@ else
 </div>
 
 
-
+<div class="modal-body">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>CodigoReparacion</th>
+        <th>CodigoDetalleReparacion</th>
+        <th>CodigoProducto</th>
+        <th>Nombre</th>
+        <th>Unidades</th>
+        <th>precio</th>
+        <th>total</th>
+        <th>CodigoAsignacionPermisos</th>
+        <th>Descuento</th>
+      </tr>
+    </thead>
+    <tbody id="detalle-table-body">
+    </tbody>
+  </table>
+</div>
 
 
 
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<@*div class="modal fade" id="Detalle" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLiveLabel" aria-hidden="true" style="display: none;">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLiveLabel">Detalle de reparación</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>Código de detalle</th>
-              <th>Código de producto</th>
-              <th>Nombre</th>
-              <th>Unidades</th>
-              <th>Precio</th>
-              <th>Total</th>
-              <th>Descuento</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach (var detalle in Model.DetallesReparacion)
-            {
-              <tr>
-                <td>@detalle.CodigoDetalleReparacion</td>
-                <td>@detalle.CodigoProducto</td>
-                <td>@detalle.Nombre</td>
-                <td>@detalle.Unidades</td>
-                <td>@detalle.Precio</td>
-                <td>@detalle.Total</td>
-                <td>@detalle.Descuento</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
-    </div>
-  </div>
-</div>
-*@
+
+
 <script>
 function mostrarModal() {
   $('#Create').modal('show');
@@ -347,6 +325,8 @@ $(document).ready(function() {
     });
   });
 });
+
+
 
 
 </script>
