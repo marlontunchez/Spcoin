@@ -22,7 +22,7 @@ else
 {
   
     <div class="table-responsive" >
- <table class="highlight" >
+ <table class="striped" >
 
         <thead class="thead-dark">
             <tr>
@@ -50,8 +50,10 @@ else
                     <td>
                    
                         <button type="button" class="btn btn-danger btn-lg eliminarBtn" data-codigo-reparacion="@reparacion.CodigoReparacion" title="Eliminar reparación"></button>
-                        <button type="button" class="btn btn-primary btn-lg" data-codigo-reparacion="@reparacion.CodigoReparacion"></button>
-                        <button type="button" class="btn btn-success btn-lg convertirBtn" data-codigo-reparacion="@reparacion.CodigoReparacion"></button>
+                      <button type="button" class="btn btn-primary btn-lg" data-codigo-reparacion="@reparacion.CodigoReparacion" id="detalle-btn" title="Ver detalle"></button>
+
+
+                        <button type="button" class="btn btn-success btn-lg convertirBtn" data-codigo-reparacion="@reparacion.CodigoReparacion" title="Convertir reparación"></button>
                    </td>
                 </tr>
             }
@@ -137,30 +139,36 @@ else
   </div>
 </div>
 
-
-<div class="modal-body">
-  <table class="table">
-    <thead>
-      <tr>
-        <th>CodigoReparacion</th>
-        <th>CodigoDetalleReparacion</th>
-        <th>CodigoProducto</th>
-        <th>Nombre</th>
-        <th>Unidades</th>
-        <th>precio</th>
-        <th>total</th>
-        <th>CodigoAsignacionPermisos</th>
-        <th>Descuento</th>
-      </tr>
-    </thead>
-    <tbody id="detalle-table-body">
-    </tbody>
-  </table>
+<div class="modal fade" id="detalle-modal" tabindex="-1" aria-labelledby="detalle-modal-label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detalle-modal-label">Detalle de reparación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Código Producto</th>
+              <th>Nombre</th>
+              <th>Unidades</th>
+              <th>Precio</th>
+              <th>Total</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="detalle-table-body">
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
 </div>
-
-
-
-
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -170,18 +178,7 @@ function mostrarModal() {
   $('#Create').modal('show');
 
 }
-function mostrarDetale() {
-  $('#Detalle').modal('show');
-  }
-  //function mostrarConvertir() {
-  //$('#Convertir').modal('show');
-  //}
-  function mostrarConvertir() {
-  var codigoReparacion = $('#convertirBtn').data('codigo-reparacion');
-  console.log('Código de reparación a convertir: ' + codigoReparacion);
-  $('#convertirModal').modal('show');
-  $('#codigoReparacionConvertir').val(codigoReparacion);
-}
+
 function convertirReparacion() {
   var codigoReparacion = $('#codigoReparacionConvertir').val();
   console.log('Código de reparación a convertir: ' + codigoReparacion);
@@ -326,6 +323,61 @@ $(document).ready(function() {
   });
 });
 
+
+
+
+$('#detalle-btn').click(function() {
+  var codigoReparacion = $(this).data('codigo-reparacion');
+  $('#detalle-modal').modal('show');
+  $('#detalle-modal').find('#codigoReparacion').val(codigoReparacion);
+  llamardetalle(codigoReparacion);
+});
+
+function llamardetalle(codigoReparacion) {
+  console.log('Código de reparación:', codigoReparacion); // Agrega esta línea para verificar que el código de reparación se está enviando correctamente
+  console.log('Iniciando llamada AJAX para obtener detalle de reparación');
+  $.ajax({
+    url: '@Url.Action("Detalle", "Reparacion")/' + codigoReparacion,
+    type: 'GET',
+    dataType: 'JSON',
+    success: function(response) {
+      console.log('Respuesta recibida:');
+      console.log(response);
+      if (response.status == true) {
+        var datos = response.data;
+        console.log('Datos recibidos:');
+        console.log(datos);
+        llenarTablaDetalle(datos);
+      } else {
+        console.log('Error en la respuesta:');
+        console.log(response);
+        alert(response.message);
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log('Error en la llamada AJAX:');
+      console.log(textStatus, errorThrown);
+    }
+  });
+
+}function llenarTablaDetalle(datos) {
+  console.log('Llenando tabla con datos:', datos);
+  var tablaDetalle = $('#detalle-table-body');
+  tablaDetalle.empty();
+  $.each(datos, function(index, row) {
+    var fila = '<tr>' +
+                 '<td>' + row.codigoDetalleReparacion + '</td>' +
+                 '<td>' + row.codigoProducto + '</td>' +
+                 '<td>' + row.nombre + '</td>' +
+                 '<td>' + row.unidades + '</td>' +
+                 '<td>' + row.precio + '</td>' +
+                 '<td>' + row.total + '</td>' +
+                 '<td>' + '<button class="btn btn-danger btn-eliminar-detalle">Eliminar</button>' + '</td>' +
+         
+               '</tr>';
+    tablaDetalle.append(fila);
+  });
+}
 
 
 

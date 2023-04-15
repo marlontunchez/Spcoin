@@ -158,6 +158,53 @@ namespace SPCOIN.Controllers
             }
         }
 
+        public async Task<JsonResult> Detalle(int codigoReparacion)
+        {
+            try
+            {
+                List<DetalleReparacion> detallesReparacion = new List<DetalleReparacion>();
+                using (SqlConnection con = new SqlConnection(_context.Conexion))
+                {
+                    using (SqlCommand cmd = new SqlCommand("SDETALLEREPARACION", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@CODIGOVENTA", System.Data.SqlDbType.Int).Value = codigoReparacion;
+                        con.Open();
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                DetalleReparacion detalleReparacion = new DetalleReparacion()
+                                {
+                                    CodigoDetalleReparacion = Convert.ToInt32(reader["CODIGODETALLEREPARACION"]),
+                                    CodigoProducto = Convert.ToString(reader["CODIGO"]),
+                                    Nombre = Convert.ToString(reader["NOMBRE"]),
+                                    Unidades = Convert.ToInt32(reader["UNIDADES"]),
+                                    Precio = Convert.ToDecimal(reader["PRECIO"]),
+                                    Total = Convert.ToDecimal(reader["TOTAL"]),
+                                };
+                                detallesReparacion.Add(detalleReparacion);
+                            }
+                        }
+                    }
+                }
+                var response = new
+                {
+                    status = true,
+                    data = detallesReparacion
+                };
+                return Json(response);
+            }
+            catch (Exception e)
+            {
+                var response = new
+                {
+                    status = false,
+                    message = e.Message
+                };
+                return Json(response);
+            }
+        }
 
 
     }
