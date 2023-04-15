@@ -147,6 +147,32 @@ else
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <form class="row g-3 mb-3">
+          <div class="col-md-2">
+            <label for="input-codigo-producto" class="form-label">Código producto</label>
+            <input type="text" class="form-control" id="input-codigo-producto">
+          </div>
+          <div class="col-md-3">
+            <label for="input-nombre-producto" class="form-label">Nombre producto</label>
+            <input type="text" class="form-control" id="input-nombre-producto">
+          </div>
+          <div class="col-md-2">
+            <label for="input-unidades" class="form-label">Unidades</label>
+            <input type="number" class="form-control" id="input-unidades">
+          </div>
+          <div class="col-md-2">
+            <label for="input-precio" class="form-label">Precio</label>
+            <input type="number" class="form-control" id="input-precio" step="0.01">
+          </div>
+          <div class="col-md-2">
+            <label for="input-total" class="form-label">Total</label>
+            <input type="number" class="form-control" id="input-total" step="0.01" readonly>
+          </div>
+          <div class="col-md-1">
+            <label for="btn-agregar">&nbsp;</label>
+            <button type="button" class="btn btn-primary form-control" id="btn-agregar">Agregar</button>
+          </div>
+        </form>
         <table class="table">
           <thead>
             <tr>
@@ -169,6 +195,7 @@ else
     </div>
   </div>
 </div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
