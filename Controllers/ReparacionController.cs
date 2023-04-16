@@ -30,6 +30,7 @@ namespace SPCOIN.Controllers
                         con.Open();
                         using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
                         {
+                            
                             while (reader.Read())
                             {
                                 Reparacion reparacion = new Reparacion()
@@ -167,6 +168,7 @@ namespace SPCOIN.Controllers
                 {
                     using (SqlCommand cmd = new SqlCommand("SDETALLEREPARACION", con))
                     {
+                        Console.WriteLine(codigoReparacion);
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
                         cmd.Parameters.Add("@CODIGOVENTA", System.Data.SqlDbType.Int).Value = codigoReparacion;
                         con.Open();
@@ -203,6 +205,42 @@ namespace SPCOIN.Controllers
                     message = e.Message
                 };
                 return Json(response);
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Createdetail(DetalleReparacion D)
+        {
+            try
+            {
+                using (SqlConnection con = new(_context.Conexion))
+                {
+                    using (SqlCommand cmd = new("IDETALLEREPARACION", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@CODIGOREPARACION", System.Data.SqlDbType.BigInt).Value = D.CodigoReparacion;
+                        cmd.Parameters.Add("@CODIGOPRODUCTO", System.Data.SqlDbType.VarChar).Value = D.CodigoProducto;
+
+                        cmd.Parameters.Add("@UNIDADES", System.Data.SqlDbType.Real).Value = D.Unidades;
+                        cmd.Parameters.Add("@PRECIO", System.Data.SqlDbType.Real).Value = D.Precio;
+                        cmd.Parameters.Add("@TOTAL", System.Data.SqlDbType.Real).Value = D.Precio*D.Unidades;
+                        cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = D.CodigoAsignacionPermisos;
+                        cmd.Parameters.Add("@DESCUENTO", System.Data.SqlDbType.Real).Value = 0;
+                        con.Open();
+                        cmd.ExecuteNonQuery(); // Ejecutar el comando                        
+                    }
+                    con.Close();
+
+
+                }
+                return Json(new { success = true }); ;
+
+            }
+            catch (System.Exception e)
+            {
+                ViewBag.Error = e.Message;
+                return Json(new { success = false }); ;
             }
         }
 

@@ -50,8 +50,8 @@ else
                     <td>
                    
                         <button type="button" class="btn btn-danger btn-lg eliminarBtn" data-codigo-reparacion="@reparacion.CodigoReparacion" title="Eliminar reparación"></button>
-                      <button type="button" class="btn btn-primary btn-lg" data-codigo-reparacion="@reparacion.CodigoReparacion" id="detalle-btn" title="Ver detalle"></button>
-
+<button type="button" class="btn btn-primary btn-lg detalle-btn" data-codigo-reparacion="@reparacion.CodigoReparacion" id="detalle-btn-@reparacion.CodigoReparacion" title="Ver detalle"></button>
+        
 
                         <button type="button" class="btn btn-success btn-lg convertirBtn" data-codigo-reparacion="@reparacion.CodigoReparacion" title="Convertir reparación"></button>
                    </td>
@@ -353,18 +353,22 @@ $(document).ready(function() {
 
 
 
-$('#detalle-btn').click(function() {
+$('.detalle-btn').click(function() {
   var codigoReparacion = $(this).data('codigo-reparacion');
+  console.log('Código de reparación:', codigoReparacion);
   $('#detalle-modal').modal('show');
   $('#detalle-modal').find('#codigoReparacion').val(codigoReparacion);
   llamardetalle(codigoReparacion);
 });
 
+
+
 function llamardetalle(codigoReparacion) {
   console.log('Código de reparación:', codigoReparacion); // Agrega esta línea para verificar que el código de reparación se está enviando correctamente
   console.log('Iniciando llamada AJAX para obtener detalle de reparación');
   $.ajax({
-    url: '@Url.Action("Detalle", "Reparacion")/' + codigoReparacion,
+    url: '@Url.Action("Detalle", "Reparacion")',
+    data: { codigoReparacion: codigoReparacion },
     type: 'GET',
     dataType: 'JSON',
     success: function(response) {
@@ -386,8 +390,9 @@ function llamardetalle(codigoReparacion) {
       console.log(textStatus, errorThrown);
     }
   });
+}
 
-}function llenarTablaDetalle(datos) {
+function llenarTablaDetalle(datos) {
   console.log('Llenando tabla con datos:', datos);
   var tablaDetalle = $('#detalle-table-body');
   tablaDetalle.empty();
@@ -399,12 +404,19 @@ function llamardetalle(codigoReparacion) {
                  '<td>' + row.unidades + '</td>' +
                  '<td>' + row.precio + '</td>' +
                  '<td>' + row.total + '</td>' +
-                 '<td>' + '<button class="btn btn-danger btn-eliminar-detalle">Eliminar</button>' + '</td>' +
-         
+               '<td>' + '<button class="btn btn-danger btn-eliminar-detalle" data-codigo-detalle-reparacion="' + row.codigoDetalleReparacion + '">Eliminar</button>' + '</td>' +
                '</tr>';
     tablaDetalle.append(fila);
   });
 }
+
+$(document).on('click', '.btn-eliminar-detalle', function() {
+  var codigoDetalleReparacion = $(this).data('codigo-detalle-reparacion');
+  console.log('Código de detalle de reparación a eliminar:', codigoDetalleReparacion);
+  // Realizar aquí la llamada AJAX para eliminar el detalle de reparación correspondiente
+});
+
+;
 
 
 
