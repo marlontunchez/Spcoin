@@ -144,6 +144,7 @@ else
       <div class="modal-header">
         <h5 class="modal-title" id="detalle-modal-label">Detalle de reparación</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+             
       </div>
       <div class="modal-body">
         <form class="row g-3 mb-3">
@@ -170,6 +171,7 @@ else
           <div class="col-md-1">
             <label for="btn-agregar">&nbsp;</label>
             <button type="button" class="btn btn-primary form-control" id="btn-agregar">Agregar</button>
+               <input type="hidden" id="codigoReparacion">
           </div>
         </form>
         <table class="table">
@@ -376,7 +378,7 @@ function llamardetalle(codigoReparacion) {
       if (response.status == true) {
         var datos = response.data;
         console.log('Datos recibidos:');
-        console.log(datos);
+    
         llenarTablaDetalle(datos);
       } else {
         console.log('Error en la respuesta:');
@@ -411,9 +413,9 @@ function llenarTablaDetalle(datos) {
 
 $(document).on('click', '.btn-eliminar-detalle', function() {
   var codigoDetalleReparacion = $(this).data('codigo-detalle-reparacion');
-  console.log(codigoDetalleReparacion);
   eliminadetalle(codigoDetalleReparacion);
 });
+
 
 function eliminadetalle(codigoDetalleReparacion) {
   $.ajax({
@@ -421,8 +423,11 @@ function eliminadetalle(codigoDetalleReparacion) {
     data: { codigoDetalleReparacion: codigoDetalleReparacion },
     type: 'DELETE',
     success: function(response) {
-      // aquí puedes realizar alguna acción si la eliminación fue exitosa
-         llamardetalle($('#codigoReparacion').val());
+        console.log("aca deberia");
+var codigoReparacion = $('#codigoReparacion').val();
+  console.log('Código de reparación:', codigoReparacion);
+    llamardetalle(codigoReparacion);
+
     },
     error: function(error) {
       console.log(error);
