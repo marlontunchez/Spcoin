@@ -49,6 +49,7 @@ else
                     <td>
                    
                         <button type="button" class="btn btn-danger btn-lg eliminarBtn" data-codigo-reparacion="@reparacion.CodigoReparacion" title="Eliminar reparación"></button>
+
 <button type="button" class="btn btn-primary btn-lg detalle-btn" data-codigo-reparacion="@reparacion.CodigoReparacion" id="detalle-btn-@reparacion.CodigoReparacion" title="Ver detalle"></button>
         
 
@@ -365,15 +366,13 @@ $('.detalle-btn').click(function() {
 
 
 function llamardetalle(codigoReparacion) {
-  console.log('Código de reparación:', codigoReparacion); // Agrega esta línea para verificar que el código de reparación se está enviando correctamente
-  console.log('Iniciando llamada AJAX para obtener detalle de reparación');
-  $.ajax({
+   $.ajax({
     url: '@Url.Action("Detalle", "Reparacion")',
     data: { codigoReparacion: codigoReparacion },
     type: 'GET',
     dataType: 'JSON',
     success: function(response) {
-      console.log('Respuesta recibida:');
+   
       console.log(response);
       if (response.status == true) {
         var datos = response.data;
@@ -418,9 +417,14 @@ $(document).on('click', '.btn-eliminar-detalle', function() {
 
 
 function eliminadetalle(codigoDetalleReparacion) {
+  var codigoReparacion = $('#codigoReparacion').val();
+
   $.ajax({
     url: '/Reparacion/DeleteDetail',
-    data: { codigoDetalleReparacion: codigoDetalleReparacion },
+    data: {
+      codigoDetalleReparacion: codigoDetalleReparacion,
+      codigoReparacion: codigoReparacion
+    },
     type: 'DELETE',
     success: function(response) {
         console.log("aca deberia");
@@ -434,8 +438,6 @@ var codigoReparacion = $('#codigoReparacion').val();
     }
   });
 }
-
-
 
 
 </script>
