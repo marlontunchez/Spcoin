@@ -70,7 +70,7 @@ namespace SPCOIN.Controllers
                     {
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
                         cmd.Parameters.Add("@CODIGOCLIENTE", System.Data.SqlDbType.BigInt).Value = 1;
-                        cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = 1;
+                        cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = HttpContext.Session.GetInt32("CODIGOASIGNACIONPERMISOS");
 
                         cmd.Parameters.Add("@MOTOCICLETA", System.Data.SqlDbType.VarChar).Value = r.Motocicleta ;
                         cmd.Parameters.Add("@MECANICO", System.Data.SqlDbType.VarChar).Value = r.Mecanico;
@@ -277,6 +277,43 @@ namespace SPCOIN.Controllers
                 return Json(new { success = false, message = e.Message });
             }
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> insertDetail(DetalleReparacion dr)
+        {
+            try
+            {
+                using (SqlConnection con = new(_context.Conexion))
+                {
+                    using (SqlCommand cmd = new("IDETALLEREPARACION", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@CODIGOREPARACION", System.Data.SqlDbType.BigInt).Value = dr.CodigoReparacion;
+                        cmd.Parameters.Add("@CODIGOPRODUCTO", System.Data.SqlDbType.VarChar).Value = dr.CodigoProducto;
+                        cmd.Parameters.Add("@UNIDADES", System.Data.SqlDbType.BigInt).Value =dr.Unidades;
+                        cmd.Parameters.Add("@PRECIO", System.Data.SqlDbType.Real).Value = dr.Precio;
+                        cmd.Parameters.Add("@TOTAL", System.Data.SqlDbType.Real).Value = dr.Unidades*dr.Precio;
+                        cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = HttpContext.Session.GetInt32("CODIGOASIGNACIONPERMISOS");
+                        cmd.Parameters.Add("@DESCUENTO", System.Data.SqlDbType.Real).Value = 0;
+
+                        con.Open();
+                        cmd.ExecuteNonQuery(); // Ejecutar el comando                        
+                    }
+                    con.Close();
+
+
+                }
+                return Json(new { success = true }); ;
+
+            }
+            catch (System.Exception e)
+            {
+                ViewBag.Error = e.Message;
+                return Json(new { success = false }); ;
+            }
+        }
+
 
     }
 }

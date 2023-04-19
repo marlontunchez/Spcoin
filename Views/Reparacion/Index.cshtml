@@ -439,5 +439,43 @@ var codigoReparacion = $('#codigoReparacion').val();
   });
 }
 
+$(document).ready(function() {
+  $('#btn-agregar').click(function() {
+    var codigoProducto = $('#input-codigo-producto').val();
+    var nombreProducto = $('#input-nombre-producto').val();
+    var unidades = $('#input-unidades').val();
+    var precio = $('#input-precio').val();
+    var codigoReparacion = $('#codigoReparacion').val();
+    var dataToSend = {
+        "codigoProducto": codigoProducto,
+        "nombreProducto": nombreProducto,
+        "unidades": unidades,
+        "precio": precio,
+        "codigoReparacion": codigoReparacion
+    };
+    $.ajax({
+        type: "POST",
+        url: "/Reparacion/insertDetail",
+        data: dataToSend,
+        dataType: "json",
+        success: function (data) {
+          var codigoReparacion = $('#codigoReparacion').val();
+ 
+    llamardetalle(codigoReparacion);
+    $('#input-codigo-producto').val('');
+    $('#input-nombre-producto').val('');
+    $('#input-unidades').val(1);
+    $('#input-precio').val(0);
+     $('#input-total').val(0);
+     $('#input-codigo-producto').focus();
+            //Aquí se puede agregar código para actualizar la tabla o realizar alguna acción después de insertar el detalle.
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, errorThrown);
+        }
+    });
+  });
+});
+
 
 </script>
