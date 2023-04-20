@@ -477,5 +477,50 @@ $(document).ready(function() {
   });
 });
 
+$(document).ready(function() {
+  $('#input-codigo-producto').on('input', function() {
+    console.log('Se ha ingresado una letra en el input del código');
+    var codigoProducto = $(this).val();
+    $.ajax({
+      type: 'GET',
+
+      url: '/reparacion/ObtenerProducto',
+      data: { codigo: codigoProducto },
+      dataType: 'json',
+      success: function(data) {
+      
+     
+        $('#input-precio').val(data.precio);
+        $('#input-nombre-producto').val(data.nombre);
+        $('#input-unidades').val(1);
+     calcularTotal();
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.log('Error en la solicitud: ' + errorThrown);
+      }
+    });
+  });
+});
+
+
+function calcularTotal() {
+  var precio = parseFloat($('#input-precio').val()) || 0;
+  var unidades = parseFloat($('#input-unidades').val()) || 1;
+  var total = precio * unidades;
+  $('#input-total').val(total.toFixed(2));
+}
+
+$(document).ready(function() {
+  $('#input-precio, #input-unidades').on('input', function() {
+    calcularTotal();
+  });
+});
+
+$('#input-unidades').on('blur', function() {
+  var unidades = $(this).val();
+  if (unidades === '' || unidades === '0') {
+    $(this).val('1');
+  }
+});
 
 </script>

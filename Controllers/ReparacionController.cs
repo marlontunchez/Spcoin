@@ -315,5 +315,45 @@ namespace SPCOIN.Controllers
         }
 
 
+        public async Task<IActionResult> ObtenerProducto(string codigo)
+        {
+            try
+            {
+                Producto producto = null;
+                using (SqlConnection con = new SqlConnection(_context.Conexion))
+                {
+                    using (SqlCommand cmd = new SqlCommand("SBUSCAPRODUCTO", con))
+                    {
+
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@CODIGOPRODUCTO", System.Data.SqlDbType.VarChar).Value = codigo;
+                        cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = HttpContext.Session.GetInt32("CODIGOASIGNACIONPERMISOS") ?? 0;
+                        con.Open();
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                        {
+                            if (reader.Read())
+                            {
+                                producto = new Producto()
+                                {
+                                    CodigoProducto = Convert.ToString(reader["CODIGOPRODUCTO"]),
+                                    Nombre = Convert.ToString(reader["NOMBRE"]),
+              
+                                    Precio = Convert.ToDouble(reader["PRECIO1"]),
+                                    Existencia = Convert.ToInt32(reader["EXISTENCIA"]),
+                                    VenderSinExistencia = Convert.ToBoolean(reader["VENDERSINEXISTENCIA"])
+                                };
+                            }
+                        }
+                    }
+                }
+
+                return Json(producto);
+            }
+            catch (Exception e)
+            {
+                return Json(new { error = e.Message });
+            }
+        }
+
     }
 }
