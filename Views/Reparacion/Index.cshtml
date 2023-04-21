@@ -373,10 +373,10 @@ function llamardetalle(codigoReparacion) {
     dataType: 'JSON',
     success: function(response) {
    
-   
+      console.log(response);
       if (response.status == true) {
         var datos = response.data;
-       
+        console.log('Datos recibidos:');
     
         llenarTablaDetalle(datos);
       } else {
@@ -429,7 +429,7 @@ function eliminadetalle(codigoDetalleReparacion) {
     success: function(response) {
         console.log("aca deberia");
 var codigoReparacion = $('#codigoReparacion').val();
- ;
+  console.log('Código de reparación:', codigoReparacion);
     llamardetalle(codigoReparacion);
 
     },
