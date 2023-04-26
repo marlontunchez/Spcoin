@@ -21,7 +21,7 @@ namespace SPCOIN.Controllers
             if (c.Identity != null)
             {
                 if (c.Identity.IsAuthenticated)
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Inicio");
             }
             return View();
         }

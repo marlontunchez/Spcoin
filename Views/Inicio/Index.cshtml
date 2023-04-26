@@ -1,0 +1,147 @@
+﻿<!-- Agregar la referencia a jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Agregar la referencia a Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Agregar el canvas para dibujar el gráfico -->
+
+
+<canvas id="chartVentasPorMes" width="50" height="20"></canvas>
+<canvas id="VendedoresMes" width="100" height="40"></canvas>
+<!-- Agregar el script que dibuja el gráfico -->
+<script>
+$(document).ready(function() {
+  obtenerDatosVentasPorMes();
+});
+
+
+function obtenerDatosVentasPorMes() {
+  console.log("Solicitando datos...");
+  $.ajax({
+    url: "/inicio/ventaspormes",
+    type: "GET",
+    dataType: "json",
+    success: function(data) {
+        console.log(data);
+        crearChartVentasPorMes(data);
+  //   if (data && data.data && data.data.length) {
+  //  console.log(data);
+  //  crearChartVentasPorMes(data);
+  //} else {
+  //  console.log('Los datos recibidos no tienen la estructura esperada.');
+  //}
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus, errorThrown);
+    }
+  });
+}
+function crearChartVentasPorMes(datos) {
+  var labels = [];
+  var ventas = [];
+  for (var i = 0; i < datos.labels.length; i++) {
+    labels.push(datos.labels[i]);
+    ventas.push(datos.data[i]);
+  }
+  var ctx = document.getElementById("chartVentasPorMes").getContext('2d');
+  var chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Ventas por mes',
+        data: ventas,
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 2,
+        pointRadius: 5,
+        pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+        pointBorderColor: 'rgba(54, 162, 235, 1)',
+        pointHoverRadius: 7,
+        pointHoverBackgroundColor: 'rgba(54, 162, 235, 1)',
+        pointHoverBorderColor: 'rgba(54, 162, 235, 1)'
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+}
+
+
+	
+	$(document).ready(function() {
+  obtenerDatosVentasVendedores();
+});
+
+function obtenerDatosVentasVendedores() {
+  console.log("Solicitando datos...");
+  $.ajax({
+    url: "/inicio/ventasvendedores",
+    type: "GET",
+    dataType: "json",
+    success: function(data) {
+      console.log(data);
+      crearChartVentasVendedores(data);
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus, errorThrown);
+    }
+  });
+}
+
+function crearChartVentasVendedores(datos) {
+  var labels = [];
+  var ventas = [];
+  for (var i = 0; i < datos.labels.length; i++) {
+    labels.push(datos.labels[i]);
+    ventas.push(datos.data[i]);
+  }
+  var ctx = document.getElementById("VendedoresMes").getContext('2d');
+  var chart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Ventas por vendedor',
+        data: ventas,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+}
+
+
+</script>

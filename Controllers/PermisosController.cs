@@ -18,7 +18,7 @@ namespace SPCOIN.Controllers
             //HttpContext.Items["CodigoA"] = codigoasignacionpermisos;
 
             TempData["CODIGOASIGNACIONPERMISOS"] = codigoasignacionpermisos;        
-            return RedirectToAction("index", "home");
+            return RedirectToAction("index", "Inicio");
             // Código adicional
         }
     }

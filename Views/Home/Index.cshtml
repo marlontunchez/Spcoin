@@ -2,7 +2,67 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<canvas id="myChart"></canvas>
+<script>
+function getData() {
+  // Realizar una solicitud AJAX al servidor para obtener los datos
+  $.ajax({
+    url: "/home/Ventaspormes",
+    type: "GET",
+    dataType: "json",
+    success: function(data) {
+      // Procesar los datos recibidos para el gráfico
+      var labels = [];
+      var values = [];
+
+      data.forEach(function(item) {
+        labels.push(item.MES);
+        values.push(item.VENTAS);
+      });
+
+      // Llamar a la función que dibuja el gráfico
+      drawPieChart(labels, values);
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus, errorThrown);
+    }
+  });
+}
+function drawPieChart(labels, values) {
+  // Obtener el elemento Canvas y su contexto
+  var ctx = document.getElementById("myChart").getContext("2d");
+
+  // Crear el objeto Chart y definir sus opciones
+  var myChart = new Chart(ctx, {
+    type: "pie",
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          data: values,
+          backgroundColor: [
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56",
+            "#2ecc71",
+            "#3498db",
+            "#f1c40f",
+            "#e74c3c",
+            "#9b59b6",
+            "#34495e",
+            "#16a085",
+            "#27ae60",
+            "#2980b9",
+          ],
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+    },
+  });
+}
+$(document).ready(function() {
+  getData();
+});
+</script>

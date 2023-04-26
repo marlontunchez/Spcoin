@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SPCOIN.Models;
+using System.Data.SqlClient;
 using System.Diagnostics;
 
 namespace SPCOIN.Controllers
@@ -11,6 +12,9 @@ namespace SPCOIN.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        
+
+    
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -33,6 +37,13 @@ namespace SPCOIN.Controllers
         {
             return View();
         }
+        public class VentasPorMes
+        {
+            public string Mes { get; set; }
+            public int Ventas { get; set; }
+            public decimal TotalVentas { get; internal set; }
+        }
+    
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
