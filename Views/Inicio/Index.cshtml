@@ -6,65 +6,103 @@
 
 <!-- Agregar el canvas para dibujar el gráfico -->
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ @*  <canvas id="chartVentasPorMes"></canvas>
+ 
 
-<div class="graficos">
-  <h3>Ventas por Mes</h3>
-  <canvas id="chartVentasPorMes"></canvas>
-  <p><em>Este gráfico muestra las ventas totales por mes durante el año actual.</em></p>
-</div>
+                 <canvas id="VendedoresMes"></canvas>
+*@
 
-<div class="graficos">
-  <h3>Vendedores por Mes</h3>
-  <canvas id="VendedoresMes"></canvas>
-  <p><em>Este gráfico muestra la cantidad de ventas realizadas por cada vendedor durante el año actual.</em></p>
-</div>
+  <!-- Begin Page Content -->
+                <div class="container-fluid">
 
-<div class="graficos">
-  <h3>Vendedores en el Mes Actual</h3>
-  <canvas id="VendedoresMesActual"></canvas>
-  <p><em>Este gráfico muestra la cantidad de ventas realizadas por cada vendedor durante el mes actual.</em></p>
-</div>
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">Gráficos</h1>
+                    <p class="mb-4"></p>
 
-<div class="graficos">
-  <h3>Total de Ventas del Día</h3>
-  <canvas id="TotalVentasdia"></canvas>
-  <p><em>Este gráfico muestra la cantidad total de ventas realizadas en el día de hoy.</em></p>
-</div>
+                    <!-- Content Row -->
+                    <div class="row">
 
+                        <div class="col-xl-8 col-lg-7">
 
+                            <!-- Area Chart -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">VENTAS POR MES</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-area">
+                                     <canvas id="chartVentasPorMes"></canvas>
+                                    </div>
+                                    <hr>
+                                    Este gráfico representa las ventas realizadas durante el año en curso.
+                              
+                                </div>
+                            </div>
 
-<style>
-.tabla-graficos .graficos {
-  max-width: 50%;
-  height: auto;
-}
+                            <!-- Bar Chart -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Vendedores</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-bar">
+                                         <canvas id="VendedoresMes"></canvas>
+                                    </div>
+                                    <hr>
+                                      Este gráfico representa las sumatoria de ventas por usuario durante el año en curso.
+                              
+                        
+                                </div>
+                            </div>
 
-  
-  .tabla-graficos td {
-    display: block;
-    text-align: center;
-  }
-}
-</style>
+                        </div>
+
+                        <!-- Donut Chart -->
+                        <div class="col-xl-4 col-lg-5">
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">VENTAS ACTUAL</h6>
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <div class="chart-pie pt-4">
+                                        <canvas id="Vendedoresmes"></canvas>
+                                    </div>
+                                    <hr>
+                                     Este gráfico representa las sumatoria de ventas por usuario en el mes acutal.
+                              
+                               
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+       
+            
 
 
 <!-- Agregar el script que dibuja el gráfico -->
 <script>
 $(document).ready(function() {
-  obtenerDatosVentasPorMes();
+  obtenerDatosVentasAnual();
+  ObtenerVendedoresAnual();
+  ObtenerVendedoresMensual();
 });
 
 
-function obtenerDatosVentasPorMes() {
+function obtenerDatosVentasAnual() {
   console.log("Solicitando datos...");
   $.ajax({
-    url: "/inicio/ventaspormes",
+    url: "/inicio/ventasanual",
     type: "GET",
     dataType: "json",
     success: function(data) {
         console.log(data);
-        crearChartVentasPorMes(data);
+        ChartVentasAnual(data);
   //   if (data && data.data && data.data.length) {
   //  console.log(data);
   //  crearChartVentasPorMes(data);
@@ -77,20 +115,22 @@ function obtenerDatosVentasPorMes() {
     }
   });
 }
-function crearChartVentasPorMes(datos) {
+function ChartVentasAnual(datos) {
   var labels = [];
   var ventas = [];
   for (var i = 0; i < datos.labels.length; i++) {
     labels.push(datos.labels[i]);
     ventas.push(datos.data[i]);
   }
+  
+
   var ctx = document.getElementById("chartVentasPorMes").getContext('2d');
   var chart = new Chart(ctx, {
     type: 'line',
     data: {
       labels: labels,
       datasets: [{
-        label: 'Ventas por mes',
+        label: 'Ventas',
         data: ventas,
         backgroundColor: 'rgba(54, 162, 235, 0.2)',
         borderColor: 'rgba(54, 162, 235, 1)',
@@ -115,21 +155,15 @@ function crearChartVentasPorMes(datos) {
   });
 }
 
-
-	
-	$(document).ready(function() {
-  obtenerDatosVentasVendedores();
-});
-
-function obtenerDatosVentasVendedores() {
+function ObtenerVendedoresAnual() {
   console.log("Solicitando datos...");
   $.ajax({
-    url: "/inicio/ventasvendedores",
+    url: "/inicio/vendedoresanual",
     type: "GET",
     dataType: "json",
     success: function(data) {
       console.log(data);
-      crearChartVentasVendedores(data);
+      ChartvendedoresAnual(data);
     },
     error: function(jqXHR, textStatus, errorThrown) {
       console.log(textStatus, errorThrown);
@@ -137,34 +171,104 @@ function obtenerDatosVentasVendedores() {
   });
 }
 
-function crearChartVentasVendedores(datos) {
+function ChartvendedoresAnual(datos) {
   var labels = [];
   var ventas = [];
   for (var i = 0; i < datos.labels.length; i++) {
     labels.push(datos.labels[i]);
     ventas.push(datos.data[i]);
   }
+  
   var ctx = document.getElementById("VendedoresMes").getContext('2d');
+  var chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Vendedores',
+        data: ventas,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.8)',
+              'rgba(255, 205, 86, 0.8)',
+               'rgba(75, 192, 192, 0.8)',
+                 'rgba(54, 162, 235, 0.8)',
+             'rgba(153, 102, 255, 0.8)',
+  'rgba(255, 159, 64, 0.8)'
+        ],
+        borderColor: [
+       'rgba(255, 99, 132, 1)',
+  'rgba(255, 205, 86, 1)',
+  'rgba(75, 192, 192, 1)',
+  'rgba(54, 162, 235, 1)',
+  'rgba(153, 102, 255, 1)',
+  'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+}
+
+
+
+function ObtenerVendedoresMensual() {
+  console.log("Solicitando datos...");
+  $.ajax({
+    url: "/inicio/vendedoresmensual",
+    type: "GET",
+    dataType: "json",
+    success: function(data) {
+      console.log(data);
+      ChartvendedoresMensual(data);
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus, errorThrown);
+    }
+  });
+}
+
+function ChartvendedoresMensual(datos) {
+  var labels = [];
+  var ventas = [];
+  for (var i = 0; i < datos.labels.length; i++) {
+    labels.push(datos.labels[i]);
+    ventas.push(datos.data[i]);
+
+  }
+
+
+
+  
+  var ctx = document.getElementById("Vendedoresmes").getContext('2d');
   var chart = new Chart(ctx, {
     type: 'pie',
     data: {
       labels: labels,
       datasets: [{
-        label: 'Ventas por vendedor',
+        label: 'Vendedores',
         data: ventas,
         backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)'
+          'rgba(255, 99, 132, 0.8)',
+          'rgba(255, 205, 86, 0.8)',
+          'rgba(75, 192, 192, 0.8)',
+          'rgba(54, 162, 235, 0.8)',
+          'rgba(153, 102, 255, 0.8)',
+          'rgba(255, 159, 64, 0.8)'
         ],
         borderColor: [
           'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
+          'rgba(255, 205, 86, 1)',
           'rgba(75, 192, 192, 1)',
+          'rgba(54, 162, 235, 1)',
           'rgba(153, 102, 255, 1)',
           'rgba(255, 159, 64, 1)'
         ],

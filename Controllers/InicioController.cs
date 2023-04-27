@@ -24,7 +24,7 @@ namespace SPCOIN.Controllers
             public int data { get; set; }
         }
 
-        public async Task<IActionResult> Ventaspormes()
+        public async Task<IActionResult> VentasAnual()
         {
             try
             {
@@ -35,6 +35,8 @@ namespace SPCOIN.Controllers
                     using (SqlCommand cmd = new SqlCommand("RVENTASPORMES", con))
                     {
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = HttpContext.Session.GetInt32("CODIGOASIGNACIONPERMISOS");
+
                         con.Open();
                         using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
                         {
@@ -58,7 +60,7 @@ namespace SPCOIN.Controllers
 
 
 
-        public async Task<IActionResult> Ventasvendedores()
+        public async Task<IActionResult> VendedoresAnual()
         {
             try
             {
@@ -69,6 +71,7 @@ namespace SPCOIN.Controllers
                     using (SqlCommand cmd = new SqlCommand("RVENDEDORESPORMES", con))
                     {
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = HttpContext.Session.GetInt32("CODIGOASIGNACIONPERMISOS");
                         con.Open();
                         using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
                         {
@@ -89,6 +92,41 @@ namespace SPCOIN.Controllers
                 return Json(new { Error = e.Message });
             }
         }
+
+
+        public async Task<IActionResult> VendedoresMensual()
+        {
+            try
+            {
+                var labels = new List<string>();
+                var data = new List<int>();
+                using (SqlConnection con = new SqlConnection(_context.Conexion))
+                {
+                    using (SqlCommand cmd = new SqlCommand("RVENDEDORESMESACTUAL", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = HttpContext.Session.GetInt32("CODIGOASIGNACIONPERMISOS");
+                        con.Open();
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                labels.Add(Convert.ToString(reader["VENDEDOR"]));
+                                data.Add(Convert.ToInt32(reader["VENTAS"]));
+                            }
+                        }
+                    }
+                }
+
+                return Json(new { labels, data });
+            }
+            catch (Exception e)
+            {
+                ViewBag.Error = e.Message;
+                return Json(new { Error = e.Message });
+            }
+        }
+
 
     }
 }
