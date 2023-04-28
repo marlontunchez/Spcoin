@@ -588,6 +588,15 @@ $(document).ready(function () {
         buscarProductos();
     });
 })
+
+$(document).ready(function () {
+    $('#busqueda').on('keyup', function () {
+        buscarProductos();
+    });
+});
+
+
+
 function buscarProductos() {
     var busqueda = $('#busqueda').val();
     console.log("buscando productos con la cadena: " + busqueda);
@@ -598,21 +607,23 @@ function buscarProductos() {
         dataType: 'json',
         success: function (productos) {
             console.log("obteniendo productos...");
-   console.log(productos);
+   
             $('#resultados').empty();
             if (productos.status) {
                 $.each(productos.data, function (i, producto) {
-                 console.log(producto.codigoproducto);
+             
                     var row = '<tr>' +
                     '<td>' + producto.codigoProducto + '</td>' +
                     '<td>' + producto.nombre + '</td>' +
                     '<td>' + producto.descripcion + '</td>' +
                     '<td>' + producto.precio + '</td>' +
-                    '<td>' + producto.existencia + '</td>' +   
+                    '<td>' + producto.existencia + '</td>' + 
+                    '<td><button type="button" class="btn btn-primary btn-sm" onclick="agregarProducto(' + producto.codigoProducto + ', \'' + producto.nombre + '\', ' + producto.precio + ')">Agregar</button></td>' +  
                     '</tr>';
                     $('#resultados').append(row);
                 });
                 console.log("productos cargados correctamente.");
+
             } else {
                 console.log("error al cargar productos: " + productos.message);
             }
@@ -622,5 +633,15 @@ function buscarProductos() {
         }
     });
 }
+
+function agregarProducto(codigo, nombre, precio) {
+    $('#input-codigo-producto').val(codigo);
+    $('#input-nombre-producto').val(nombre);
+    $('#input-precio').val(precio);
+    $('#input-unidades').val(1);
+    calcularTotal();
+    $('#detalle-modal').modal('show');
+}
+
 
 </script>
