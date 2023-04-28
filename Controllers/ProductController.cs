@@ -55,73 +55,66 @@ namespace SPCOIN.Controllers
         }
 
 
-        // GET: ProductController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
-        // GET: ProductController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: ProductController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<JsonResult> ConsultaProducto(string busqueda)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                List<Producto> productos = new List<Producto>();
+                using (SqlConnection con = new SqlConnection(_context.Conexion))
+                {
+                    using (SqlCommand cmd = new SqlCommand("SConsultaProductos", con))
+                    {
+                        Console.WriteLine(busqueda);
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@BUSCAR", System.Data.SqlDbType.VarChar).Value = busqueda;
+                        cmd.Parameters.Add("@CODIGOSUCURSAL", System.Data.SqlDbType.BigInt).Value = 1;
+                        cmd.Parameters.Add("@COLUMNA", System.Data.SqlDbType.VarChar).Value = "P.NOMBRE";
+                        cmd.Parameters.Add("@FILTRO", System.Data.SqlDbType.VarChar).Value = "";
+                        cmd.Parameters.Add("@DESCRIPCION", System.Data.SqlDbType.VarChar).Value = "";
+
+                        con.Open();
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                Producto producto = new Producto()
+                                {
+                                    CodigoProducto = Convert.ToString(reader["CODIGO"]),
+                                    Descripcion = Convert.ToString(reader["DESCRIPCION"]),
+                                    Existencia = Convert.ToInt32(reader["EXISTENCIA"]),
+                                    Nombre = Convert.ToString(reader["NOMBRE"]),
+                                    Precio = Convert.ToDouble(reader["PRECIO1"])
+                                 
+                                };
+                                productos.Add(producto);
+                            }
+                        }
+                    }
+                }
+                var response = new
+                {
+                    status = true,
+                    data = productos
+                };
+                return Json(response);
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                var response = new
+                {
+                    status = false,
+                    message = e.Message
+                };
+                return Json(response);
             }
         }
 
-        // GET: ProductController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
 
-        // POST: ProductController/Edit/5
-        [HttpPost]
-      
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
-        // GET: ProductController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: ProductController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }
+
+
+
+
