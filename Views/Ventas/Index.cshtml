@@ -129,7 +129,7 @@ function llenarTablaVentas(data) {
     var fila = '<tr>' +
                  '<td>' + row.codigoVenta + '</td>' +
                  '<td>' + row.correlativo + '</td>' +
-                 '<td>' + row.fecha + '</td>' +
+                 '<td>' + row.fecha.split('T')[0] + '</td>' +
                  '<td>' + row.codigoCliente + '</td>' +
                  '<td>' + row.nombre + '</td>' +
                  '<td>' + row.direccion + '</td>' +
