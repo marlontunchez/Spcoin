@@ -1,0 +1,173 @@
+﻿
+
+<div class="container-fluid">
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="fechainicial">Desde:</label>
+        <input type="date" class="form-control" id="fechainicial">
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="fechafinal">Hasta:</label>
+        <input type="date" class="form-control" id="fechafinal">
+      </div>
+    </div>
+    <div class="col-md-2">
+      <button type="button" class="btn btn-primary mt-4" id="btn-buscar">Buscar</button>
+    </div>
+  </div>
+</div>
+
+<div class="form-group">
+    <label for="busqueda">Buscar:</label>
+    <input type="text" class="form-control" id="busqueda" name="busqueda" onkeyup="cargarDatos()">
+</div>
+
+<table id="tablaVentas" class="display">
+    <thead>
+        <tr>
+            <th>Código Venta</th>
+            <th>Correlativo</th>
+            <th>Fecha</th>
+            <th>Código Cliente</th>
+            <th>Nombre</th>
+            <th>Dirección</th>
+            <th>NIT</th>
+            <th>Forma de Pago</th>
+            <th>Documento</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>UUID</th>
+            <th>Número</th>
+            <th>Fecha Certificación</th>
+            <th>Código Documento</th>
+            <th>Vendedor</th>
+            <th>Comentario</th>
+             <th>Ver Acciones</th>
+        </tr>
+    </thead>
+    <tbody id="tablaVentasBody">
+ 
+
+    </tbody>
+</table>
+
+<div class="modal fade" id="modalOpciones" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Opciones de Venta</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Seleccione una opción:</p>
+        <div class="d-grid gap-2 col-6 mx-auto">
+          <button class="btn btn-primary" type="button" id="btnVerDetalle">Ver Detalle</button>
+          <button class="btn btn-primary" type="button" id="btnModificar">Modificar</button>
+          <button class="btn btn-danger" type="button" id="btnEliminar">Eliminar</button>
+          <button class="btn btn-secondary" type="button" id="btnCancelar">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+$(document).ready(function () {
+    // Cuando se carga la página, se llama a la función de carga de datos
+    cargarDatos();
+});
+
+$(document).ready(function() {
+  // Agregar evento click al botón de buscar
+  $("#btn-buscar").click(function() {
+    cargarDatos();
+    console.log("kfañsl");
+  });
+});
+
+function cargarDatos() {
+    // Obtener los valores de fecha inicial, fecha final y búsqueda
+    var fechaInicial = $('#fechainicial').val();
+    var fechaFinal = $('#fechafinal').val();
+    var busqueda = $('#busqueda').val();
+
+    // Llamada AJAX al controlador para obtener los datos de ventas
+    $.ajax({
+        url: "/Ventas/obtenerVentas",
+        type: "POST",
+        dataType: "json",
+        data: { "fechaInicial": fechaInicial, "fechaFinal": fechaFinal, "busqueda": "" },
+        data: { "fechaInicial": fechaInicial, "fechaFinal": fechaFinal, "busqueda": busqueda },
+
+        success: function (result) {
+            if (result.status) {
+                // Si la llamada es exitosa, se llena la tabla con los datos
+                 console.log(result);
+                llenarTablaVentas(result.data);
+            } else {
+                // Si hay algún error, se muestra un mensaje de error
+                alert("Error: " + result.message);
+            }
+        },
+        error: function () {
+            // Si hay algún error en la llamada, se muestra un mensaje de error
+            alert("Error: No se pudo conectar con el servidor");
+        }
+    });
+}
+
+function llenarTablaVentas(data) {
+  console.log('Llenando tabla con datos:', data);
+  var tablaVentas = $('#tablaVentasBody');
+  tablaVentas.empty();
+  $.each(data, function(index, row) {
+    var fila = '<tr>' +
+                 '<td>' + row.codigoVenta + '</td>' +
+                 '<td>' + row.correlativo + '</td>' +
+                 '<td>' + row.fecha + '</td>' +
+                 '<td>' + row.codigoCliente + '</td>' +
+                 '<td>' + row.nombre + '</td>' +
+                 '<td>' + row.direccion + '</td>' +
+                 '<td>' + row.nit + '</td>' +
+                 '<td>' + row.formaDePago + '</td>' +
+                 '<td>' + row.documento + '</td>' +
+                 '<td>' + row.total + '</td>' +
+                 '<td>' + row.estado + '</td>' +
+                 '<td>' + row.uuId + '</td>' +
+                 '<td>' + row.numero + '</td>' +
+                 '<td>' + row.fechaCertificacion + '</td>' +
+                 '<td>' + row.codigoDocumento + '</td>' +
+                 '<td>' + row.vendedor + '</td>' +
+                 '<td>' + row.comentario + '</td>' +
+                 '<td><button class="btnOpciones" data-codigoventa="' + row.codigoVenta + '">Ver opciones</button></td>' +
+               '</tr>';
+    tablaVentas.append(fila);
+  });
+  
+  // Agregar evento click al botón de opciones
+  $('.btnOpciones').on('click', function() {
+    var codigoVenta = $(this).data('codigoventa');
+    $('#modalOpciones').data('codigoventa', codigoVenta);
+    $('#modalOpciones').modal('show');
+  });
+}
+
+
+
+// Obtener la fecha actual
+var today = new Date();
+
+// Formatear la fecha como "YYYY-MM-DD" para establecer el valor de los elementos de entrada de fecha
+var year = today.getFullYear();
+var month = String(today.getMonth() + 1).padStart(2, '0');
+var day = String(today.getDate()).padStart(2, '0');
+var formattedDate = year + '-' + month + '-' + day;
+// Establecer el valor de los elementos de entrada de fecha como la fecha actual
+document.getElementById('fechainicial').value = formattedDate;
+document.getElementById('fechafinal').value = formattedDate;
+</script>

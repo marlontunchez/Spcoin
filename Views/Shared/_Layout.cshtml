@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SPCOIN.styles.css" asp-append-version="true" />
+     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" />
+
 </head>
 <body>
     <header>
@@ -27,7 +32,9 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Sucursal" asp-action="index">Sucursales</a>
                             </li>
-                         
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Ventas" asp-action="index">Ventas</a>
+                            </li>
                             
                         </ul>
                         <ul class="navbar-nav">
@@ -53,6 +60,9 @@
             &copy; 2023 - SPCOIN
         </div>
     </footer>
+
+      <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

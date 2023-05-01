@@ -150,10 +150,12 @@ else
       <div class="modal-body">
         <form class="row g-3 mb-3">
           <div class="col-md-2">
-            <label for="input-codigo-producto" class="form-label">Código producto</label>
-
-           <input type="text" class="form-control" id="input-codigo-producto" tabindex="1">
-
+            <div class="input-group">
+              <input type="text" class="form-control" id="input-codigo-producto" tabindex="1">
+              <button class="btn btn-outline-secondary" type="button" id="btn-buscar-producto">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
           </div>
           <div class="col-md-3">
             <label for="input-nombre-producto" class="form-label">Nombre producto</label>
@@ -174,27 +176,30 @@ else
           <div class="col-md-1">
             <label for="btn-agregar">&nbsp;</label>
             <button type="button" class="btn btn-primary form-control" id="btn-agregar">Agregar</button>
-               <input type="hidden" id="codigoReparacion">
+            <input type="hidden" id="codigoReparacion">
           </div>
         </form>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Código</th>
-              <th>Código Producto</th>
-              <th>Nombre</th>
-              <th>Unidades</th>
-              <th>Precio</th>
-              <th>Total</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="detalle-table-body">
-          </tbody>
-        </table>
+       
+        
+ <table id="detalle-table" class="table">
+  <thead>
+    <tr>
+      <th>Código</th>
+      <th>Código Producto</th>
+      <th>Nombre</th>
+      <th>Unidades</th>
+      <th>Precio</th>
+      <th>Total</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody id="detalle-table-body">
+  </tbody>
+</table>
+
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">onclick="cerrarBusqueda()Cerrar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
   </div>
@@ -244,7 +249,6 @@ else
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 
 <script>
 function mostrarModal() {
@@ -641,7 +645,21 @@ function agregarProducto(codigo, nombre, precio) {
     $('#input-unidades').val(1);
     calcularTotal();
     $('#detalle-modal').modal('show');
+        $('#busquedaModal').modal('hide');
 }
+
+// Agregar evento click al botón de la lupa dentro del input para abrir el modal de búsqueda
+$('#btn-buscar-producto').click(function() {
+  $('#busquedaModal').modal('show');
+});
+
+
+    $(document).ready(function() {
+      // Vincula DataTables con tu tabla
+      $('#detalle-table').DataTable();
+    });
+
+
 
 
 </script>
