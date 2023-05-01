@@ -621,12 +621,27 @@ function buscarProductos() {
                     '<td>' + producto.nombre + '</td>' +
                     '<td>' + producto.descripcion + '</td>' +
                     '<td>' + producto.precio + '</td>' +
-                    '<td>' + producto.existencia + '</td>' + 
-                    '<td><button type="button" class="btn btn-primary btn-sm" onclick="agregarProducto(' + producto.codigoProducto + ', \'' + producto.nombre + '\', ' + producto.precio + ')">Agregar</button></td>' +  
+                    '<td>' + producto.existencia + '</td>' +
+                    '<td>' +
+                    '<button type="button" class="btn btn-primary btn-sm" data-codigo="' + producto.codigoProducto + '" data-nombre="' + producto.nombre + '" data-precio="' + producto.precio + '">Agregar</button>' +
+                    '</td>' +
                     '</tr>';
                     $('#resultados').append(row);
                 });
                 console.log("productos cargados correctamente.");
+
+                // Agregar evento click al botón "Agregar" para llenar campos del modal detalle y cerrar modal de búsqueda
+                $('#resultados button').click(function() {
+                    var codigo = $(this).data('codigo');
+                    var nombre = $(this).data('nombre');
+                    var precio = $(this).data('precio');
+                    $('#input-codigo-producto').val(codigo);
+                    $('#input-nombre-producto').val(nombre);
+                    $('#input-precio').val(precio);
+                    $('#input-total').val(precio);
+                    $('#detalle-modal').modal('show');
+                    $('#busquedaModal').modal('hide');
+                });
 
             } else {
                 console.log("error al cargar productos: " + productos.message);
