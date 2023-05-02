@@ -55,7 +55,7 @@
 </table>
 
 <div class="modal fade" id="modalOpciones" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Opciones de Venta</h5>
@@ -64,9 +64,10 @@
       <div class="modal-body">
         <p>Seleccione una opción:</p>
         <div class="d-grid gap-2 col-6 mx-auto">
-          <button class="btn btn-primary" type="button" id="btnVerDetalle">Ver Detalle</button>
-          <button class="btn btn-primary" type="button" id="btnModificar">Modificar</button>
-          <button class="btn btn-danger" type="button" id="btnEliminar">Eliminar</button>
+             <input type="hidden" id="codigoVenta">
+           <button type="button" class="btn btn-primary" onclick="mostrarDetalle()" id="btnDetalle">Ver detalle</button>
+       @*   <button class="btn btn-primary" type="button" id="btnModificar">Modificar</button>
+          <button class="btn btn-danger" type="button" id="btnEliminar">Eliminar</button>*@
           <button class="btn btn-secondary" type="button" id="btnCancelar">Cancelar</button>
         </div>
       </div>
@@ -74,6 +75,40 @@
   </div>
 </div>
 
+<div class="modal fade" id="modalDetalle" tabindex="-1" aria-labelledby="detalle-modal-label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detalle-modal-label">Detalle Venta</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+             
+      </div>
+      <div class="modal-body">
+       
+        
+ <table id="detalletable" class="table">
+  <thead>
+    <tr>
+      <th>Código</th>
+      <th>Código Producto</th>
+      <th>Nombre</th>
+      <th>Unidades</th>
+      <th>Precio</th>
+      <th>Total</th>
+  
+    </tr>
+  </thead>
+  <tbody id="detalletablebody">
+  </tbody>
+</table>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 
@@ -101,13 +136,13 @@ function cargarDatos() {
         url: "/Ventas/obtenerVentas",
         type: "POST",
         dataType: "json",
-        data: { "fechaInicial": fechaInicial, "fechaFinal": fechaFinal, "busqueda": "" },
+
         data: { "fechaInicial": fechaInicial, "fechaFinal": fechaFinal, "busqueda": busqueda },
 
         success: function (result) {
             if (result.status) {
                 // Si la llamada es exitosa, se llena la tabla con los datos
-                 console.log(result);
+          
                 llenarTablaVentas(result.data);
             } else {
                 // Si hay algún error, se muestra un mensaje de error
@@ -145,15 +180,18 @@ function llenarTablaVentas(data) {
                  '<td>' + row.vendedor + '</td>' +
                  '<td>' + row.comentario + '</td>' +
                  '<td><button class="btnOpciones" data-codigoventa="' + row.codigoVenta + '">Ver opciones</button></td>' +
-               '</tr>';
+              
+                 '</tr>';
     tablaVentas.append(fila);
   });
   
   // Agregar evento click al botón de opciones
   $('.btnOpciones').on('click', function() {
-    var codigoVenta = $(this).data('codigoventa');
-    $('#modalOpciones').data('codigoventa', codigoVenta);
-    $('#modalOpciones').modal('show');
+   var codigoVenta = $(this).data('codigoventa');
+$('#modalOpciones').data('codigoventa', codigoVenta);
+$('#codigoVenta').val(codigoVenta); // Agregar esta línea para asignar el valor a #codigoVenta
+$('#modalOpciones').modal('show');
+
   });
 }
 
@@ -170,4 +208,66 @@ var formattedDate = year + '-' + month + '-' + day;
 // Establecer el valor de los elementos de entrada de fecha como la fecha actual
 document.getElementById('fechainicial').value = formattedDate;
 document.getElementById('fechafinal').value = formattedDate;
+
+
+function mostrarDetalle() {
+  $('#modalDetalle').modal('show');
+}
+
+
+function LlenaDetalle(codigoVenta) {
+   $.ajax({
+    url: '@Url.Action("Detalle", "DetalleVenta")',
+    data: { codigoVenta: codigoVenta },
+    type: 'GET',
+    dataType: 'JSON',
+    success: function(response) {
+   
+      console.log(response);
+      if (response.status == true) {
+        var datos = response.data;
+        console.log('Datos recibidos:');
+    
+        llenarTablaDetalle(datos);
+      } else {
+        console.log('Error en la respuesta:');
+        console.log(response);
+        alert(response.message);
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log('Error en la llamada AJAX:');
+      console.log(textStatus, errorThrown);
+    }
+  });
+}
+
+function llenarTablaDetalle(datos) {
+  console.log('Llenando tabla con datos:', datos);
+  var tablaDetalle = $('#detalletablebody');
+  tablaDetalle.empty();
+  $.each(datos, function(index, row) {
+    var fila = '<tr>' +
+                 '<td>' + row.codigoDetalleVenta + '</td>' +
+                 '<td>' + row.codigoProducto + '</td>' +
+                 '<td>' + row.nombre + '</td>' +
+                 '<td>' + row.unidades + '</td>' +
+                 '<td>' + row.precio + '</td>' +
+                 '<td>' + row.total + '</td>' +
+                 '</tr>';
+    tablaDetalle.append(fila);
+  });
+}
+$(document).ready(function () {
+    $('#modalDetalle').on('show.bs.modal', function (e) {
+        var codigoVenta = $('#codigoVenta').val();
+        console.log('aca estoy enviando');
+        console.log(codigoVenta);
+              console.log('aca estoy enviando');
+        LlenaDetalle(codigoVenta);
+    });
+});
+
+
+
 </script>

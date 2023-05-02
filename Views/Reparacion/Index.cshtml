@@ -408,12 +408,12 @@ $('.detalle-btn').click(function() {
   console.log('Código de reparación:', codigoReparacion);
   $('#detalle-modal').modal('show');
   $('#detalle-modal').find('#codigoReparacion').val(codigoReparacion);
-  llamardetalle(codigoReparacion);
+  LlenaDetalle(codigoReparacion);
 });
 
 
 
-function llamardetalle(codigoReparacion) {
+function LlenaDetalle(codigoReparacion) {
    $.ajax({
     url: '@Url.Action("Detalle", "Reparacion")',
     data: { codigoReparacion: codigoReparacion },
@@ -478,7 +478,7 @@ function eliminadetalle(codigoDetalleReparacion) {
         console.log("aca deberia");
 var codigoReparacion = $('#codigoReparacion').val();
   console.log('Código de reparación:', codigoReparacion);
-    llamardetalle(codigoReparacion);
+    LlenaDetalle(codigoReparacion);
 
     },
     error: function(error) {
@@ -509,7 +509,7 @@ $(document).ready(function() {
         success: function (data) {
           var codigoReparacion = $('#codigoReparacion').val();
  
-    llamardetalle(codigoReparacion);
+    LlenaDetalle(codigoReparacion);
     $('#input-codigo-producto').val('');
     $('#input-nombre-producto').val('');
     $('#input-unidades').val(1);

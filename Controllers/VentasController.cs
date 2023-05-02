@@ -28,8 +28,12 @@ namespace SPCOIN.Controllers
                 {
                     using (SqlCommand cmd = new SqlCommand("SVENTASREALIZADAS2", con))
                     {
+                        if (busqueda == null)
+                        {
+                            busqueda = "";
+                        }
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                        cmd.Parameters.Add("@BUSCAR", System.Data.SqlDbType.VarChar).Value = "";
+                        cmd.Parameters.Add("@BUSCAR", System.Data.SqlDbType.VarChar).Value = busqueda;
                         cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = HttpContext.Session.GetInt32("CODIGOASIGNACIONPERMISOS");
                         cmd.Parameters.Add("@COLUMNA", System.Data.SqlDbType.VarChar).Value ="C.NOMBRE";
                         cmd.Parameters.Add("@FECHAINICIAL", System.Data.SqlDbType.DateTime).Value = fechaInicial;
@@ -83,54 +87,6 @@ namespace SPCOIN.Controllers
         }
 
 
-        //public async Task<JsonResult> Detalle(int codigoReparacion)
-        //{
-        //    try
-        //    {
-        //        List<DetalleReparacion> detallesVenta = new List<DetalleReparacion>();
-        //        using (SqlConnection con = new SqlConnection(_context.Conexion))
-        //        {
-        //            using (SqlCommand cmd = new SqlCommand("SDETALLEVENTA", con))
-        //            {
-        //                Console.WriteLine(codigoReparacion);
-        //                cmd.CommandType = System.Data.CommandType.StoredProcedure;
-        //                cmd.Parameters.Add("@CODIGOVENTA", System.Data.SqlDbType.Int).Value = codigoReparacion;
-        //                con.Open();
-        //                using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
-        //                {
-        //                    while (reader.Read())
-        //                    {
-        //                        DetalleReparacion detalleReparacion = new DetalleReparacion()
-        //                        {
-        //                            CodigoDetalleReparacion = Convert.ToInt32(reader["CODIGODETALLEREPARACION"]),
-        //                            CodigoProducto = Convert.ToString(reader["CODIGO"]),
-        //                            Nombre = Convert.ToString(reader["NOMBRE"]),
-        //                            Unidades = Convert.ToInt32(reader["UNIDADES"]),
-        //                            Precio = Convert.ToDecimal(reader["PRECIO"]),
-        //                            Total = Convert.ToDecimal(reader["TOTAL"]),
-        //                        };
-        //                        detallesVenta.Add(detalleVenta);
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        var response = new
-        //        {
-        //            status = true,
-        //            data = detalleVenta
-        //        };
-        //        return Json(response);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        var response = new
-        //        {
-        //            status = false,
-        //            message = e.Message
-        //        };
-        //        return Json(response);
-        //    }
-        //}
 
     }
 }
