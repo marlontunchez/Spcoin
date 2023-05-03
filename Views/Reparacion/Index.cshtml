@@ -48,13 +48,9 @@ else
                     <td>@(reparacion.ConvertidoAVenta ? "Sí" : "No")</td>
                     <td>
                    
-                        <button type="button" class="btn btn-danger btn-lg eliminarBtn" data-codigo-reparacion="@reparacion.CodigoReparacion" title="Eliminar reparación"></button>
+                             <button type="button" class="btn btn-primary opcionesBtn" data-codigo-reparacion="@reparacion.CodigoReparacion" title="Opciones de venta">Opciones</button>
 
-<button type="button" class="btn btn-primary btn-lg detalle-btn" data-codigo-reparacion="@reparacion.CodigoReparacion" id="detalle-btn-@reparacion.CodigoReparacion" title="Ver detalle"></button>
-        
-
-                        <button type="button" class="btn btn-success btn-lg convertirBtn" data-codigo-reparacion="@reparacion.CodigoReparacion" title="Convertir reparación"></button>
-                   </td>
+                    </td>
                 </tr>
             }
             @if (!Model.Any())
@@ -245,6 +241,28 @@ else
 </div>
 
 
+<div class="modal fade" id="modalOpciones" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Opciones de Reparación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Seleccione una opción:</p>
+        <div class="d-grid gap-2 col-6 mx-auto">
+          <input type="hidden" id="codigoReparacion">
+          <button type="button" class="btn btn-primary detalle-btn"  title="Ver detalle">Ver detalle</button>
+          <button type="button" class="btn btn-danger eliminarBtn" title="Eliminar reparación">Eliminar reparación</button>
+          <button type="button" class="btn btn-success convertirBtn"  title="Convertir a venta">Convertir a venta</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 
 
@@ -257,7 +275,7 @@ function mostrarModal() {
 }
 
 function convertirReparacion() {
-  var codigoReparacion = $('#codigoReparacionConvertir').val();
+ var codigoReparacion = $('#codigoReparacion').val(); // Obtener
   console.log('Código de reparación a convertir: ' + codigoReparacion);
   $.ajax({
     type: 'POST',
@@ -285,6 +303,7 @@ function cerrarModal() {
 }
 function cerrarDetalle() {
   $('#Detalle').modal('hide');
+
 }
 
 function guardarReparacion() {
@@ -345,14 +364,16 @@ $(document).ready(function() {
 
 $(document).ready(function() {
   $('.eliminarBtn').click(function() {
-    var codigoReparacion = $(this).data('codigo-reparacion');
+ var codigoReparacion = $('#codigoReparacion').val(); // Obtener
     console.log(codigoReparacion); // Agregamos el console.log para mostrar el valor de codigoreparacion
     $('#eliminarModal').modal('show');
     $('#codigoReparacionEliminar').val(codigoReparacion);
+     $('#modalOpciones').modal('hide'); 
   });
 
 
   $('#confirmarEliminarBtn').click(function() {
+
     var codigoReparacion = $('#codigoReparacionEliminar').val();
     console.log('Código de reparación a eliminar: ' + codigoReparacion); // Muestra el código de reparación en la consola
     $.ajax({
@@ -374,10 +395,13 @@ $(document).ready(function() {
   });
 
     $('.convertirBtn').click(function() {
-    var codigoReparacion = $(this).data('codigo-reparacion');
+   
+    var codigoReparacion = $('#codigoReparacion').val(); // Obtener
     console.log(codigoReparacion);
     $('#convertirModal').modal('show');
     $('#codigoReparacionConvertir').val(codigoReparacion);
+       $('#modalOpciones').modal('hide'); 
+
   });
 
 
@@ -402,14 +426,17 @@ $(document).ready(function() {
 
 
 
-
 $('.detalle-btn').click(function() {
-  var codigoReparacion = $(this).data('codigo-reparacion');
-  console.log('Código de reparación:', codigoReparacion);
+  var codigoReparacion = $('#codigoReparacion').val(); // Obtener el código de reparación del input oculto
+  console.log('El código de reparación es:', codigoReparacion);
   $('#detalle-modal').modal('show');
   $('#detalle-modal').find('#codigoReparacion').val(codigoReparacion);
+
   LlenaDetalle(codigoReparacion);
+       $('#modalOpciones').modal('hide');
+c
 });
+
 
 
 
@@ -669,12 +696,13 @@ $('#btn-buscar-producto').click(function() {
 });
 
 
-    $(document).ready(function() {
-      // Vincula DataTables con tu tabla
-      $('#detalle-table').DataTable();
-    });
+  $('.opcionesBtn').click(function() {
+  var codigoReparacion = $(this).data('codigoReparacion');
+  console.log(codigoReparacion);
+  $('#codigoReparacion').val(codigoReparacion); // Agregar el valor de codigoReparacion al input oculto
+  $('#modalOpciones').modal('show'); // Mostrar el modal
 
-
+});
 
 
 </script>
