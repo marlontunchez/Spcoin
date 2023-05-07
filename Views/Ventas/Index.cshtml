@@ -1,4 +1,7 @@
 ﻿
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.11.3/datatables.min.css"/>
+
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.11.3/datatables.min.js"></script>
 
 <div class="container-fluid">
   <div class="row justify-content-center mt-4">
@@ -25,34 +28,34 @@
     <input type="text" class="form-control" id="busqueda" name="busqueda" onkeyup="cargarDatos()">
 </div>
 
-<table id="tablaVentas" class="display">
-    <thead>
-        <tr>
-            <th>Código Venta</th>
-            <th>Correlativo</th>
-            <th>Fecha</th>
-            <th>Código Cliente</th>
-            <th>Nombre</th>
-            <th>Dirección</th>
-            <th>NIT</th>
-            <th>Forma de Pago</th>
-            <th>Documento</th>
-            <th>Total</th>
-            <th>Estado</th>
-            <th>UUID</th>
-            <th>Número</th>
-            <th>Fecha Certificación</th>
-            <th>Código Documento</th>
-            <th>Vendedor</th>
-            <th>Comentario</th>
-             <th>Ver Acciones</th>
-        </tr>
-    </thead>
-    <tbody id="tablaVentasBody">
- 
-
-    </tbody>
+<table id="tablaVentas" class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>Código</th>
+      @*<th>Correlativo</th>*@
+      <th>Fecha</th>
+      @*<th>Código Cliente</th>*@
+      <th>Nombre</th>
+      <th>Dirección</th>
+      <th>NIT</th>
+      <th>Pago</th>
+      <th>Documento</th>
+      <th>Total</th>
+      <th>Estado</th>
+  @*    <th>UUID</th>
+      <th>Número</th>
+      <th>Fecha Certificación</th>
+      <th>Código Documento</th>*@
+      <th>Vendedor</th>
+      <th>Comentario</th>
+      <th>Ver Acciones</th>
+    </tr>
+  </thead>
+  <tbody id="tablaVentasBody">
+    <!-- Aquí irían las filas de la tabla -->
+  </tbody>
 </table>
+
 
 <div class="modal fade" id="modalOpciones" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -95,13 +98,11 @@
       <th>Unidades</th>
       <th>Precio</th>
       <th>Total</th>
-  
-    </tr>
+      </tr>
   </thead>
   <tbody id="detalletablebody">
   </tbody>
 </table>
-
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -109,7 +110,6 @@
     </div>
   </div>
 </div>
-
 <script>
 
 $(document).ready(function () {
@@ -163,9 +163,9 @@ function llenarTablaVentas(data) {
   $.each(data, function(index, row) {
     var fila = '<tr>' +
                  '<td>' + row.codigoVenta + '</td>' +
-                 '<td>' + row.correlativo + '</td>' +
+                 //'<td>' + row.correlativo + '</td>' +
                  '<td>' + row.fecha.split('T')[0] + '</td>' +
-                 '<td>' + row.codigoCliente + '</td>' +
+                 //'<td>' + row.codigoCliente + '</td>' +
                  '<td>' + row.nombre + '</td>' +
                  '<td>' + row.direccion + '</td>' +
                  '<td>' + row.nit + '</td>' +
@@ -173,14 +173,14 @@ function llenarTablaVentas(data) {
                  '<td>' + row.documento + '</td>' +
                  '<td>' + row.total + '</td>' +
                  '<td>' + row.estado + '</td>' +
-                 '<td>' + row.uuId + '</td>' +
-                 '<td>' + row.numero + '</td>' +
-                 '<td>' + row.fechaCertificacion + '</td>' +
-                 '<td>' + row.codigoDocumento + '</td>' +
+                 //'<td>' + row.uuId + '</td>' +
+                 //'<td>' + row.numero + '</td>' +
+                 //'<td>' + row.fechaCertificacion + '</td>' +
+                 ////'<td>' + row.codigoDocumento + '</td>' +
                  '<td>' + row.vendedor + '</td>' +
                  '<td>' + row.comentario + '</td>' +
-                 '<td><button class="btnOpciones" data-codigoventa="' + row.codigoVenta + '">Ver opciones</button></td>' +
-              
+              '<td><button class="btnOpciones btn btn-success" data-codigoventa="' + row.codigoVenta + '">Opciones</button></td>' +
+
                  '</tr>';
     tablaVentas.append(fila);
   });
@@ -212,6 +212,7 @@ document.getElementById('fechafinal').value = formattedDate;
 
 function mostrarDetalle() {
   $('#modalDetalle').modal('show');
+  $('#modalOpciones').modal('hide');
 }
 
 
@@ -268,6 +269,20 @@ $(document).ready(function () {
     });
 });
 
+$(document).ready(function() {
+    $('#tablaVentas').DataTable();
+} );
+
+$(document).ready(function() {
+    $('#tablaVentas').DataTable({
+        "createdRow": function(row, data, dataIndex) {
+            if (data[9] == "Completado") {
+                $(row).addClass('table-success');
+            }
+        }
+    });
+    $('#tablaVentas').addClass('table-striped');
+} );
 
 
 </script>

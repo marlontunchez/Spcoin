@@ -21,7 +21,7 @@
 else
 {
     <div class="table-responsive" >
- <table class="striped" >
+ <table class="table" >
 
         <thead class="thead-dark">
             <tr>
@@ -692,7 +692,10 @@ function agregarProducto(codigo, nombre, precio) {
 
 // Agregar evento click al botón de la lupa dentro del input para abrir el modal de búsqueda
 $('#btn-buscar-producto').click(function() {
+     $('#resultados').empty();
+    $('#busqueda').val('');
   $('#busquedaModal').modal('show');
+
 });
 
 
