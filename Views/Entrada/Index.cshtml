@@ -1,4 +1,26 @@
-﻿<div class="form-group">
+﻿
+
+<div class="container-fluid">
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="fechainicial">Desde:</label>
+        <input type="date" class="form-control" id="fechainicial">
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="fechafinal">Hasta:</label>
+        <input type="date" class="form-control" id="fechafinal">
+      </div>
+    </div>
+    <div class="col-md-2">
+      <button type="button" class="btn btn-primary mt-4" id="btn-buscar">Buscar</button>
+    </div>
+  </div>
+</div>
+
+<div class="form-group">
     <label for="busqueda">Buscar:</label>
     <input type="text" class="form-control" id="busqueda" name="busqueda" onkeyup="cargarDatos()">
 </div>
@@ -11,12 +33,253 @@
       <th>Descripción</th>
       <th>Total</th>
       <th>Estado</th>
-      <th>Vendedor</th>
-      <th>Comentario</th>
-      <th>Ver Acciones</th>
+    
+      <th>Acciones</th>
     </tr>
   </thead>
   <tbody id="tablaEntradaBody">
     <!-- Aquí irían las filas de la tabla -->
   </tbody>
 </table>
+
+<div class="modal fade" id="modalOpciones" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Opciones de Entrada</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Seleccione una opción:</p>
+        <div class="d-grid gap-2 col-6 mx-auto">
+             <input type="hidden" id="codigoentrada">
+           <button type="button" class="btn btn-primary" onclick="mostrarDetalle()" id="btnDetalle">Ver detalle</button>
+       @*   <button class="btn btn-primary" type="button" id="btnModificar">Modificar</button>
+          <button class="btn btn-danger" type="button" id="btnEliminar">Eliminar</button>*@
+          <button class="btn btn-secondary" type="button" id="btnCancelar">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="detalle-modal" tabindex="-1" aria-labelledby="detalle-modal-label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detalle-modal-label">Detalle de reparación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="row g-3 mb-3">
+          <div class="col-md-2">
+            <div class="input-group">
+              <input type="text" class="form-control" id="input-codigo-producto" tabindex="1">
+              <button class="btn btn-outline-secondary" type="button" id="btn-buscar-producto">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label for="input-nombre-producto" class="form-label">Nombre producto</label>
+            <input type="text" class="form-control" id="input-nombre-producto">
+          </div>
+          <div class="col-md-2">
+            <label for="input-unidades" class="form-label">Unidades</label>
+            <input type="number" class="form-control" id="input-unidades">
+          </div>
+          <div class="col-md-2">
+            <label for="input-precio" class="form-label">Precio</label>
+            <input type="number" class="form-control" id="input-precio" step="0.01">
+          </div>
+          <div class="col-md-2">
+            <label for="input-total" class="form-label">Total</label>
+            <input type="number" class="form-control" id="input-total" step="0.01" readonly>
+          </div>
+          <div class="col-md-1">
+            <label for="btn-agregar">&nbsp;</label>
+            <button type="button" class="btn btn-primary form-control" id="btn-agregar">Agregar</button>
+            <input type="hidden" id="codigoEntrada">
+          </div>
+        </form>
+ <table id="detalle-table" class="table">
+  <thead>
+    <tr>
+      <th>Código</th>
+      <th>Código Producto</th>
+      <th>Nombre</th>
+      <th>Unidades</th>
+      <th>Precio</th>
+      <th>Total</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody id="detalle-table-body">
+  </tbody>
+</table>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+ 
+<script>
+    $(document).ready(function () {
+    // Cuando se carga la página, se llama a la función de carga de datos
+    cargarDatos();
+});
+    var today = new Date();
+    // Formatear la fecha como "YYYY-MM-DD" para establecer el valor de los elementos de entrada de fecha
+    var year = today.getFullYear();
+    var month = String(today.getMonth() + 1).padStart(2, '0');
+    var day = String(today.getDate()).padStart(2, '0');
+    var formattedDate = year + '-' + month + '-' + day;
+    
+    // Establecer el valor de los elementos de entrada de fecha como la fecha actual
+    document.getElementById('fechainicial').value = formattedDate;
+    document.getElementById('fechafinal').value = formattedDate;
+
+   function cargarDatos() {
+  // Obtener los valores de fecha inicial, fecha final y búsqueda
+  var fechaInicial = $('#fechainicial').val();
+  var fechaFinal = $('#fechafinal').val();
+  var busqueda = $('#busqueda').val();
+
+  // Llamada AJAX al controlador para obtener los datos de ventas
+  $.ajax({
+    url: "/Entrada/obtenerentradas",
+    type: "POST",
+    dataType: "json",
+    data: { "fechaInicial": fechaInicial, "fechaFinal": fechaFinal, "busqueda": busqueda },
+    success: function (result) {
+             console.log(result);
+      if (result.status) {
+     
+          
+        // Si la llamada es exitosa, se llena la tabla con los datos
+        llenarTablaEntrada(result.data);
+      } else {
+        // Si hay algún error, se muestra un mensaje de error
+        alert("Error: " + result.message);
+      }
+    },
+    error: function () {
+      // Si hay algún error en la llamada, se muestra un mensaje de error
+      alert("Error: No se pudo conectar con el servidor");
+    }
+  });
+}
+
+function llenarTablaEntrada(data) {
+  console.log('Llenando tabla con datos:', data);
+  var tablaEntrada = $('#tablaEntradaBody');
+  tablaEntrada.empty();
+  $.each(data, function(index, row) {
+    var fila = '<tr>' +
+                 '<td>' + row.codigoEntrada + '</td>' +
+                 //'<td>' + row.correlativo + '</td>' +
+                 '<td>' + row.fecha.split('T')[0] + '</td>' +
+                 //'<td>' + row.codigoCliente + '</td>' +
+                 '<td>' + row.sucursal + '</td>' +
+                 '<td>' + row.descripcion + '</td>' +
+                 '<td>' + row.total + '</td>' +
+                 '<td>' + row.estado + '</td>' +
+             '<td><button class="btn btn-success btnOpciones" data-bs-toggle="modal" data-bs-target="#modalOpciones" data-codigoentrada="' + row.codigoEntrada + '">Opciones</button></td>' +
+
+                 '</tr>';
+    tablaEntrada.append(fila);
+  });
+}
+
+
+$(document).ready(function() {
+  // Agregar evento click al botón de buscar
+  $("#btn-buscar").click(function() {
+    cargarDatos();
+    console.log("kfañsl");
+  });
+});
+
+
+
+
+$('.btnOpciones').click(function() {
+  var codigoEntrada = $(this).data('codigoentrada'); // Obtener el código de entrada del atributo data
+  console.log('El código de entrada es:', codigoEntrada);
+  $('#modalOpciones').modal('show');
+  $('#modalOpciones').find('#codigoEntrada').val(codigoEntrada);
+});
+
+$('#btnDetalle').click(function() {
+  var codigoEntrada = $('#codigoEntrada').val();
+  console.log('El código de entrada es:', codigoEntrada);
+  // ...
+});
+
+
+  // abre el modal detalle
+
+$(document).on('click', '.btnOpciones', function() {
+  var codigoEntrada = $(this).data('codigoentrada');
+    $('#detalle-modal').modal('show');
+  $('#modalOpciones').modal('hide');
+
+    console.log('El código de entrada es:', codigoEntrada);
+    LlenaDetalle(codigoEntrada);
+});
+
+
+
+function LlenaDetalle(codigoEntrada) {
+  $.ajax({
+    url: '@Url.Action("Detalle", "DetalleEntrada")',
+    data: { codigoEntrada: codigoEntrada },
+    type: 'GET',
+    dataType: 'JSON',
+    success: function(response) {
+      console.log(response);
+      if (response.status == true) {
+        var datos = response.data;
+        console.log('Datos recibidos:');
+        console.log(datos);
+        llenarTablaDetalle(datos);
+      } else {
+        console.log('Error en la respuesta:');
+        console.log(response);
+        alert(response.message);
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log('Error en la llamada AJAX:');
+      console.log(textStatus, errorThrown);
+    }
+  });
+}
+
+function llenarTablaDetalle(datos) {
+  console.log('Llenando tabla con datos:', datos);
+  var tablaDetalle = $('#detalle-table-body');
+  tablaDetalle.empty();
+  $.each(datos, function(index, row) {
+    var fila = '<tr>' +
+                 '<td>' + row.codigoDetalleEntrada + '</td>' +
+                 '<td>' + row.codigoProducto + '</td>' +
+                 '<td>' + row.nombre + '</td>' +
+                 '<td>' + row.unidades + '</td>' +
+                 '<td>' + row.costo + '</td>' +
+                 '<td>' + row.total + '</td>' +
+                 '<td>' + '<button class="btn btn-danger btn-eliminar-detalle" data-codigo-detalle-entrada="' + row.codigoDetalleEntrada + '">Eliminar</button>' + '</td>' +
+     
+               '</tr>';
+    tablaDetalle.append(fila);
+  });
+}
+
+
+</script>
+
+

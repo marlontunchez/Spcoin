@@ -188,6 +188,10 @@ function llenarTablaVentas(data) {
   // Agregar evento click al botón de opciones
   $('.btnOpciones').on('click', function() {
    var codigoVenta = $(this).data('codigoventa');
+
+
+
+
 $('#modalOpciones').data('codigoventa', codigoVenta);
 $('#codigoVenta').val(codigoVenta); // Agregar esta línea para asignar el valor a #codigoVenta
 $('#modalOpciones').modal('show');
@@ -223,28 +227,21 @@ function LlenaDetalle(codigoVenta) {
     type: 'GET',
     dataType: 'JSON',
     success: function(response) {
-   
-      console.log(response);
       if (response.status == true) {
-        var datos = response.data;
-        console.log('Datos recibidos:');
-    
+        var datos = response.data;  
         llenarTablaDetalle(datos);
       } else {
         console.log('Error en la respuesta:');
-        console.log(response);
         alert(response.message);
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
-      console.log('Error en la llamada AJAX:');
       console.log(textStatus, errorThrown);
     }
   });
 }
 
 function llenarTablaDetalle(datos) {
-  console.log('Llenando tabla con datos:', datos);
   var tablaDetalle = $('#detalletablebody');
   tablaDetalle.empty();
   $.each(datos, function(index, row) {

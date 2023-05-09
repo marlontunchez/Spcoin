@@ -141,7 +141,6 @@ else
       <div class="modal-header">
         <h5 class="modal-title" id="detalle-modal-label">Detalle de reparación</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-             
       </div>
       <div class="modal-body">
         <form class="row g-3 mb-3">
@@ -175,8 +174,6 @@ else
             <input type="hidden" id="codigoReparacion">
           </div>
         </form>
-       
-        
  <table id="detalle-table" class="table">
   <thead>
     <tr>
@@ -269,6 +266,7 @@ else
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+
 function mostrarModal() {
   $('#Create').modal('show');
 
@@ -425,7 +423,7 @@ $(document).ready(function() {
 });
 
 
-
+ // Obtener el código de
 $('.detalle-btn').click(function() {
   var codigoReparacion = $('#codigoReparacion').val(); // Obtener el código de reparación del input oculto
   console.log('El código de reparación es:', codigoReparacion);
@@ -434,11 +432,8 @@ $('.detalle-btn').click(function() {
 
   LlenaDetalle(codigoReparacion);
        $('#modalOpciones').modal('hide');
-c
+
 });
-
-
-
 
 function LlenaDetalle(codigoReparacion) {
    $.ajax({
