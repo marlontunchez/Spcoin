@@ -127,6 +127,25 @@
 </div>
 
  
+<div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirmación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro que deseas?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="confirmarEliminarBtn" data-dismiss="modal">Eliminar</button>
+        <input type="hidden" id="codigoEntrdaEliminar">
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
     $(document).ready(function () {
     // Cuando se carga la página, se llama a la función de carga de datos
@@ -241,15 +260,15 @@ function LlenaDetalle(codigoEntrada) {
     type: 'GET',
     dataType: 'JSON',
     success: function(response) {
-      console.log(response);
+      
       if (response.status == true) {
         var datos = response.data;
         console.log('Datos recibidos:');
-        console.log(datos);
+  
         llenarTablaDetalle(datos);
       } else {
         console.log('Error en la respuesta:');
-        console.log(response);
+      
         alert(response.message);
       }
     },
@@ -261,7 +280,7 @@ function LlenaDetalle(codigoEntrada) {
 }
 
 function llenarTablaDetalle(datos) {
-  console.log('Llenando tabla con datos:', datos);
+
   var tablaDetalle = $('#detalle-table-body');
   tablaDetalle.empty();
   $.each(datos, function(index, row) {
@@ -278,6 +297,14 @@ function llenarTablaDetalle(datos) {
     tablaDetalle.append(fila);
   });
 }
+
+
+// Agrega un controlador de eventos al botón de eliminar detalle
+$(document).on('click', '.btn-eliminar-detalle', function() {
+  var codigoDetalleEntrada = $(this).data('codigo-detalle-entrada');
+  $('#codigoEntrda').val(codigoDetalleEntrada);
+  $('#eliminarModal').modal('show');
+});
 
 
 </script>
