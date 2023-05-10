@@ -56,7 +56,8 @@
            <button type="button" class="btn btn-primary"  id="btnDetalle">Ver detalle</button>
        @*   <button class="btn btn-primary" type="button" id="btnModificar">Modificar</button>
           <button class="btn btn-danger" type="button" id="btnEliminar">Eliminar</button>*@
-          <button class="btn btn-secondary" type="button" id="btnCancelar">Cancelar</button>
+    <button class="btn btn-secondary" type="button" id="btnCancelar" data-bs-dismiss="modal">Cancelar</button>
+
         </div>
       </div>
     </div>
@@ -233,6 +234,7 @@ $('#btnDetalle').click(function() {
   console.log('El código de entrada es btn detalle:', codigoEntrada);
      LlenaDetalle(codigoEntrada);
      $('#detalle-modal').modal('show');
+     $('#modalOpciones').modal('hide');
   // ...
 });
 
@@ -296,18 +298,18 @@ function llenarTablaDetalle(datos) {
 }
 
 
+
 function eliminadetalle(codigoDetalleEntrada) {
   $.ajax({
-
-    url: '/DetalleEntrada/DeleteDetail',
+    url: '/DetalleEntrada/Deletedetalle',
     data: {
       codigoDetalleEntrada: codigoDetalleEntrada,
-       },
-    type: 'DELETE',
+    },
+    type: 'DELETE', // Cambiar el tipo de método HTTP a POST
     success: function(response) {
-      console.log("aca deberia");
       var codigoEntrada = $('#codigoentrada').val();
-      console.log('Código que esto:', codigoEntrada);
+    
+      LlenaDetalle(codigoEntrada);
     },
     error: function(error) {
       console.log(error);
@@ -315,11 +317,12 @@ function eliminadetalle(codigoDetalleEntrada) {
   });
 }
 
+
+
 // Agrega un controlador de eventos al botón de eliminar detalle
 $(document).on('click', '.btn-eliminar-detalle', function(event) {
  // evita la propagación del evento hacia arriba en el árbol del DOM
   var codigoDetalleEntrada = $(this).data('codigo-detalle-entrada');
-  console.log('eliminacion');
   eliminadetalle(codigoDetalleEntrada);
 });
 
