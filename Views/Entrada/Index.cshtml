@@ -53,7 +53,7 @@
         <p>Seleccione una opción:</p>
         <div class="d-grid gap-2 col-6 mx-auto">
              <input type="hidden" id="codigoentrada">
-           <button type="button" class="btn btn-primary" onclick="mostrarDetalle()" id="btnDetalle">Ver detalle</button>
+           <button type="button" class="btn btn-primary"  id="btnDetalle">Ver detalle</button>
        @*   <button class="btn btn-primary" type="button" id="btnModificar">Modificar</button>
           <button class="btn btn-danger" type="button" id="btnEliminar">Eliminar</button>*@
           <button class="btn btn-secondary" type="button" id="btnCancelar">Cancelar</button>
@@ -226,16 +226,13 @@ $(document).ready(function() {
 
 
 
-$('.btnOpciones').click(function() {
-  var codigoEntrada = $(this).data('codigoentrada'); // Obtener el código de entrada del atributo data
-  console.log('El código de entrada es:', codigoEntrada);
-  $('#modalOpciones').modal('show');
-  $('#modalOpciones').find('#codigoEntrada').val(codigoEntrada);
-});
+
 
 $('#btnDetalle').click(function() {
-  var codigoEntrada = $('#codigoEntrada').val();
-  console.log('El código de entrada es:', codigoEntrada);
+  var codigoEntrada = $('#codigoentrada').val();
+  console.log('El código de entrada es btn detalle:', codigoEntrada);
+     LlenaDetalle(codigoEntrada);
+     $('#detalle-modal').modal('show');
   // ...
 });
 
@@ -244,11 +241,11 @@ $('#btnDetalle').click(function() {
 
 $(document).on('click', '.btnOpciones', function() {
   var codigoEntrada = $(this).data('codigoentrada');
-    $('#detalle-modal').modal('show');
-  $('#modalOpciones').modal('hide');
+  //  
+  $('#modalOpciones').modal('show');
+  $('#codigoentrada').val(codigoEntrada);
+    console.log('El código de entrada es         nnn:', codigoEntrada);
 
-    console.log('El código de entrada es:', codigoEntrada);
-    LlenaDetalle(codigoEntrada);
 });
 
 
@@ -292,18 +289,38 @@ function llenarTablaDetalle(datos) {
                  '<td>' + row.costo + '</td>' +
                  '<td>' + row.total + '</td>' +
                  '<td>' + '<button class="btn btn-danger btn-eliminar-detalle" data-codigo-detalle-entrada="' + row.codigoDetalleEntrada + '">Eliminar</button>' + '</td>' +
-     
+
                '</tr>';
     tablaDetalle.append(fila);
   });
 }
 
 
+function eliminadetalle(codigoDetalleEntrada) {
+  $.ajax({
+
+    url: '/DetalleEntrada/DeleteDetail',
+    data: {
+      codigoDetalleEntrada: codigoDetalleEntrada,
+       },
+    type: 'DELETE',
+    success: function(response) {
+      console.log("aca deberia");
+      var codigoEntrada = $('#codigoentrada').val();
+      console.log('Código que esto:', codigoEntrada);
+    },
+    error: function(error) {
+      console.log(error);
+    }
+  });
+}
+
 // Agrega un controlador de eventos al botón de eliminar detalle
-$(document).on('click', '.btn-eliminar-detalle', function() {
+$(document).on('click', '.btn-eliminar-detalle', function(event) {
+ // evita la propagación del evento hacia arriba en el árbol del DOM
   var codigoDetalleEntrada = $(this).data('codigo-detalle-entrada');
-  $('#codigoEntrda').val(codigoDetalleEntrada);
-  $('#eliminarModal').modal('show');
+  console.log('eliminacion');
+  eliminadetalle(codigoDetalleEntrada);
 });
 
 

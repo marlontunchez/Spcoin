@@ -69,5 +69,42 @@ namespace SPCOIN.Controllers
         }
 
 
+
+
+
+        [HttpDelete]
+        public async Task<IActionResult> Deletedetalle(int codigoDetalleEntrada)
+        {
+            try
+            {
+                // Validar que el código de reparación es un número válido
+                if (!int.TryParse(codigoDetalleEntrada.ToString(), out _))
+                {
+                    return Json(new { success = false, message = "El códigodetalleentrada no es válido" });
+                }
+
+                using (SqlConnection con = new(_context.Conexion))
+                {
+                    using (SqlCommand cmd = new("DDETALLEENTRADA", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@CODIGODETALLEENTRADA", System.Data.SqlDbType.BigInt).Value = codigoDetalleEntrada;
+                        con.Open();
+                        cmd.ExecuteNonQuery(); // Ejecutar el comando                        
+                    }
+                    con.Close();
+                }
+                return Json(new { success = true }); ;
+
+            }
+            catch (System.Exception e)
+            {
+                ViewBag.Error = e.Message;
+                return Json(new { success = false, message = e.Message });
+            }
+        }
+
+
+
     }
 }
