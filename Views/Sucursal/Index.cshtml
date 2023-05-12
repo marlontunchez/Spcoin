@@ -17,7 +17,8 @@
         <tbody>
             @foreach (var row in Model)
             {
-                <tr class="table-row-link" data-href="@Url.Action("Permisos", "Permisos", new { CodigoAsignacionPermisos = row.CodigoAsignacionPermisos })">
+<tr class="table-row-link" data-href="@Url.Action("Permisos", "Permisos", new { CodigoAsignacionPermisos = row.CodigoAsignacionPermisos, CodigoSucursal = row.CodigoSucursal })">
+
                     <td class="d-none">@row.CodigoAsignacionPermisos</td>
                     <td class="d-none">@row.CodigoSucursal</td>
                     <td style="font-size: 16px">@row.Nombre</td>

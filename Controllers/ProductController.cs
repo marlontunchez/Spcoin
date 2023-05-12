@@ -14,6 +14,46 @@ namespace SPCOIN.Controllers
             _context = context;
         }
         // GET: ProductController
+        //public async Task<IActionResult> ObtenerProducto(string codigo)
+        //{
+        //    try
+        //    {
+        //        Producto producto = null;
+        //        using (SqlConnection con = new SqlConnection(_context.Conexion))
+        //        {
+        //            using (SqlCommand cmd = new SqlCommand("SBUSCAPRODUCTO", con))
+        //            {
+
+        //                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        //                cmd.Parameters.Add("@CODIGOPRODUCTO", System.Data.SqlDbType.VarChar).Value = codigo;
+        //                cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = HttpContext.Session.GetInt32("CODIGOASIGNACIONPERMISOS") ?? 0;
+        //                con.Open();
+        //                using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+        //                {
+        //                    if (reader.Read())
+        //                    {
+        //                        producto = new Producto()
+        //                        {
+        //                            CodigoProducto = Convert.ToString(reader["CODIGOPRODUCTO"]),
+        //                            Nombre = Convert.ToString(reader["NOMBRE"]),
+
+        //                            Precio = Convert.ToDouble(reader["PRECIO1"]),
+        //                            Existencia = Convert.ToInt32(reader["EXISTENCIA"]),
+        //                            VenderSinExistencia = Convert.ToBoolean(reader["VENDERSINEXISTENCIA"])
+        //                        };
+        //                    }
+        //                }
+        //            }
+        //        }
+
+        //        return Json(producto);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return Json(new { error = e.Message });
+        //    }
+        //}
+
         public async Task<IActionResult> ObtenerProducto(string codigo)
         {
             try
@@ -23,7 +63,7 @@ namespace SPCOIN.Controllers
                 {
                     using (SqlCommand cmd = new SqlCommand("SBUSCAPRODUCTO", con))
                     {
-                      
+
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
                         cmd.Parameters.Add("@CODIGOPRODUCTO", System.Data.SqlDbType.VarChar).Value = codigo;
                         cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = HttpContext.Session.GetInt32("CODIGOASIGNACIONPERMISOS") ?? 0;
@@ -36,8 +76,8 @@ namespace SPCOIN.Controllers
                                 {
                                     CodigoProducto = Convert.ToString(reader["CODIGOPRODUCTO"]),
                                     Nombre = Convert.ToString(reader["NOMBRE"]),
-                                    Unidades = Convert.ToInt32(reader["UNIDADES"]),
-                                    Precio = Convert.ToDouble(reader["PRECIO"]),
+                                    Costo = Convert.ToDecimal(reader["COSTOACTUAL"]),
+                                    Precio = Convert.ToDecimal(reader["PRECIO1"]),
                                     Existencia = Convert.ToInt32(reader["EXISTENCIA"]),
                                     VenderSinExistencia = Convert.ToBoolean(reader["VENDERSINEXISTENCIA"])
                                 };
@@ -68,7 +108,7 @@ namespace SPCOIN.Controllers
                         Console.WriteLine(busqueda);
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
                         cmd.Parameters.Add("@BUSCAR", System.Data.SqlDbType.VarChar).Value = busqueda;
-                        cmd.Parameters.Add("@CODIGOSUCURSAL", System.Data.SqlDbType.BigInt).Value = 1;
+                        cmd.Parameters.Add("@CODIGOSUCURSAL", System.Data.SqlDbType.BigInt).Value = HttpContext.Session.GetInt32("CODIGOSUCURSAL");
                         cmd.Parameters.Add("@COLUMNA", System.Data.SqlDbType.VarChar).Value = "P.NOMBRE";
                         cmd.Parameters.Add("@FILTRO", System.Data.SqlDbType.VarChar).Value = "";
                         cmd.Parameters.Add("@DESCRIPCION", System.Data.SqlDbType.VarChar).Value = "";
@@ -84,8 +124,8 @@ namespace SPCOIN.Controllers
                                     Descripcion = Convert.ToString(reader["DESCRIPCION"]),
                                     Existencia = Convert.ToInt32(reader["EXISTENCIA"]),
                                     Nombre = Convert.ToString(reader["NOMBRE"]),
-                                    Precio = Convert.ToDouble(reader["PRECIO1"])
-                                 
+                                    Precio = Convert.ToDecimal(reader["PRECIO1"]),
+                                  
                                 };
                                 productos.Add(producto);
                             }

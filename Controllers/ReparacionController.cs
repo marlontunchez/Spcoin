@@ -338,7 +338,7 @@ namespace SPCOIN.Controllers
                                     CodigoProducto = Convert.ToString(reader["CODIGOPRODUCTO"]),
                                     Nombre = Convert.ToString(reader["NOMBRE"]),
               
-                                    Precio = Convert.ToDouble(reader["PRECIO1"]),
+                                    Precio = Convert.ToDecimal(reader["PRECIO1"]),
                                     Existencia = Convert.ToInt32(reader["EXISTENCIA"]),
                                     VenderSinExistencia = Convert.ToBoolean(reader["VENDERSINEXISTENCIA"])
                                 };

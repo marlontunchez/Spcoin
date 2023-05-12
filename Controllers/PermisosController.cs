@@ -11,10 +11,12 @@ namespace SPCOIN.Controllers
         {
             _context = context;
         }
-        public ActionResult Permisos(int codigoasignacionpermisos)
+        public ActionResult Permisos(int codigoasignacionpermisos,int codigosucursal)
         {
             HttpContext.Session.SetInt32("CODIGOASIGNACIONPERMISOS", codigoasignacionpermisos);
-             //HttpContext.Session.SetInt32("CODIGOASIGNACIONPERMISOS", codigoasignacionpermisos);
+
+            HttpContext.Session.SetInt32("CODIGOSUCURSAL", codigosucursal);
+            //HttpContext.Session.SetInt32("CODIGOASIGNACIONPERMISOS", codigoasignacionpermisos);
             //HttpContext.Items["CodigoA"] = codigoasignacionpermisos;
 
             TempData["CODIGOASIGNACIONPERMISOS"] = codigoasignacionpermisos;        

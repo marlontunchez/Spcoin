@@ -19,7 +19,10 @@
     </div>
   </div>
 </div>
-
+<br/>
+<button type="button" class="btn btn-primary" onclick="crearModal()">Crear Entrada</button>
+<br/>
+<br/>
 <div class="form-group">
     <label for="busqueda">Buscar:</label>
     <input type="text" class="form-control" id="busqueda" name="busqueda" onkeyup="cargarDatos()">
@@ -54,8 +57,8 @@
         <div class="d-grid gap-2 col-6 mx-auto">
              <input type="hidden" id="codigoentrada">
            <button type="button" class="btn btn-primary"  id="btnDetalle">Ver detalle</button>
-       @*   <button class="btn btn-primary" type="button" id="btnModificar">Modificar</button>
-          <button class="btn btn-danger" type="button" id="btnEliminar">Eliminar</button>*@
+       @*   <button class="btn btn-primary" type="button" id="btnModificar">Modificar</button>*@
+          <button class="btn btn-danger" type="button" id="btnEliminar">Eliminar</button>
     <button class="btn btn-secondary" type="button" id="btnCancelar" data-bs-dismiss="modal">Cancelar</button>
 
         </div>
@@ -146,6 +149,80 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="busquedaModal" tabindex="-1" role="dialog" aria-labelledby="busquedaModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="busquedaModalLabel">Buscar productos</h5>
+                <button type="button" class="close" data-dismiss="modal" onclick="cerrarBusqueda()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="busqueda">Buscar</label>
+                    <input type="text" class="form-control" id="busquedaproduct" placeholder="Ingrese el nombre del producto">
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Precio</th>
+                                <th>Existencia</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultados"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="cerrarBusqueda()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="Create" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Crear Entrada</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="cerrarModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form id="reparacion-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="fecha">Fecha</label>
+            <input type="date" class="form-control" id="fecha" name="fecha" required>
+          </div>
+        <div class="form-group">
+    <label for="sucursal">Sucursal</label>
+    <select class="form-control" id="sucursal" name="sucursal" required>
+        <option value="">Seleccionar Sucursal</option>
+    </select>
+        </div>
+      
+          <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <input type="text" class="form-control" id="descripcion" name="descripcion">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="cerrarModal()">Cancelar</button>
+          <button type="button" class="btn btn-primary" onclick="guardarReparacion()">Aceptar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
 <script>
     $(document).ready(function () {
@@ -325,6 +402,238 @@ $(document).on('click', '.btn-eliminar-detalle', function(event) {
   var codigoDetalleEntrada = $(this).data('codigo-detalle-entrada');
   eliminadetalle(codigoDetalleEntrada);
 });
+
+
+//inicio  de consulta producto
+
+
+
+
+
+$(document).ready(function() {
+  $('#btn-agregar').click(function() {
+    var codigoProducto = $('#input-codigo-producto').val();
+    var nombreProducto = $('#input-nombre-producto').val();
+    var unidades = $('#input-unidades').val();
+    var costo = $('#input-precio').val();
+    var codigoEntrada = $('#codigoentrada').val();
+    var dataToSend = {
+        "codigoProducto": codigoProducto,
+        "nombreProducto": nombreProducto,
+        "unidades": unidades,
+        "costo": costo,
+        "codigoEntrada": codigoEntrada
+    };
+    console.log(dataToSend);
+    $.ajax({
+        type: "POST",
+        url: "/DetalleEntrada/insertDetail",
+        data: dataToSend,
+        dataType: "json",
+        success: function (data) {
+          var codigoEntrada = $('#codigoentrada').val();
+ 
+    LlenaDetalle(codigoEntrada);
+    $('#input-codigo-producto').val('');
+    $('#input-nombre-producto').val('');
+    $('#input-unidades').val(1);
+    $('#input-precio').val(0);
+     $('#input-total').val(0);
+     $('#input-codigo-producto').focus();
+            //Aquí se puede agregar código para actualizar la tabla o realizar alguna acción después de insertar el detalle.
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, errorThrown);
+        }
+    });
+  });
+});
+
+$(document).ready(function() {
+  $('#input-codigo-producto').on('input', function() {
+    console.log('Se ha ingresado una letra en el input del código');
+    var codigoProducto = $(this).val();
+    $.ajax({
+      type: 'GET',
+      url: '/product/ObtenerProducto',
+      data: { codigo: codigoProducto },
+      dataType: 'json',
+      success: function(data) {
+        $('#input-precio').val(data.costo);
+        $('#input-nombre-producto').val(data.nombre);
+        $('#input-unidades').val(1);
+     calcularTotal();
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.log('Error en la solicitud: ' + errorThrown);
+      }
+    });
+  });
+});
+
+
+function calcularTotal() {
+  var precio = parseFloat($('#input-precio').val()) || 0;
+  var unidades = parseFloat($('#input-unidades').val()) || 1;
+  var total = precio * unidades;
+  $('#input-total').val(total.toFixed(2));
+}
+
+$(document).ready(function() {
+  $('#input-precio, #input-unidades').on('input', function() {
+    calcularTotal();
+  });
+});
+
+$('#input-unidades').on('blur', function() {
+  var unidades = $(this).val();
+  if (unidades === '' || unidades === '0') {
+    $(this).val('1');
+  }
+});
+
+
+
+$(document).ready(function() {
+    $('#input-codigo-producto').on('keydown', function(e) {
+        if (e.keyCode == 9 && $(this).val() == '') {
+            e.preventDefault();
+            $('#busquedaModal').modal('show');
+        }
+    });
+});
+
+
+function cerrarBusqueda() {
+  $('#busquedaModal').modal('hide');
+}
+
+
+
+$(document).ready(function () {
+    $('#busquedaModal').on('show.bs.modal', function () {
+        buscarProductos();
+    });
+})
+
+$(document).ready(function () {
+    $('#busquedaproduct').on('keyup', function () {
+         console.log('Se presionó una tecla en el input');
+         buscarProductos();
+    });
+});
+
+
+
+
+
+
+function buscarProductos() {
+    var busqueda = $('#busquedaproduct').val();
+    console.log("buscando productos con la cadena: " + busqueda);
+    $.ajax({
+        type: "GET",
+        url: "product/consultaProducto",
+        data: {busqueda: busqueda},
+        dataType: 'json',
+        success: function (productos) {
+            console.log("obteniendo productos...");
+            $('#resultados').empty();
+            if (productos.status) {
+                $.each(productos.data, function (i, producto) {
+                    var row = '<tr>' +
+                    '<td>' + producto.codigoProducto + '</td>' +
+                    '<td>' + producto.nombre + '</td>' +
+                    '<td>' + producto.descripcion + '</td>' +
+                    '<td>' + producto.precio + '</td>' +
+                    '<td>' + producto.existencia + '</td>' +
+                    '<td>' +
+                    '<button type="button" class="btn btn-primary btn-sm" data-codigo="' + producto.codigoProducto + '" data-nombre="' + producto.nombre + '" data-precio="' + producto.precio + '">Agregar</button>' +
+                    '</td>' +
+                    '</tr>';
+                    $('#resultados').append(row);
+                });
+                console.log("productos cargados correctamente.");
+
+                // Agregar evento click al botón "Agregar" para llenar campos del modal detalle y cerrar modal de búsqueda
+                $('#resultados button').click(function() {
+                    var codigo = $(this).data('codigo');
+                    var nombre = $(this).data('nombre');
+                    var precio = $(this).data('precio');
+                    $('#input-codigo-producto').val(codigo);
+                    $('#input-nombre-producto').val(nombre);
+                    $('#input-precio').val(precio);
+                    $('#input-total').val(precio);
+                    $('#detalle-modal').modal('show');
+                    $('#busquedaModal').modal('hide');
+                });
+
+            } else {
+                console.log("error al cargar productos: " + productos.message);
+            }
+        },
+        error: function () {
+            console.log("error al cargar productos.");
+        }
+    });
+}
+
+
+function agregarProducto(codigo, nombre, costo) {
+    $('#input-codigo-producto').val(codigo);
+    $('#input-nombre-producto').val(nombre);
+    $('#input-precio').val(costo);
+    $('#input-unidades').val(1);
+    calcularTotal();
+    $('#detalle-modal').modal('show');
+        $('#busquedaModal').modal('hide');
+}
+
+// Agregar evento click al botón de la lupa dentro del input para abrir el modal de búsqueda
+$('#btn-buscar-producto').click(function() {
+     $('#resultados').empty();
+    $('#busqueda').val('');
+  $('#busquedaModal').modal('show');
+
+});
+
+
+function crearModal() {
+  $('#Create').modal('show');
+
+}
+function cerrarModal() {
+  $('#Create').modal('hide');
+}
+
+// Obtener la fecha actual
+var today = new Date();
+
+// Formatear la fecha como "YYYY-MM-DD" para establecer el valor de los elementos de entrada de fecha
+var year = today.getFullYear();
+var month = String(today.getMonth() + 1).padStart(2, '0');
+var day = String(today.getDate()).padStart(2, '0');
+var formattedDate = year + '-' + month + '-' + day;
+// Establecer el valor de los elementos de entrada de fecha como la fecha actual
+document.getElementById('fecha').value = formattedDate;
+
+$(document).ready(function() {
+    $.ajax({
+        type: "GET",
+        url: "/sucursal/obtenerSucursales",
+        dataType: "json",
+        success: function(data) {
+            console.log(data);
+            $.each(data, function(index, sucursal) {
+                $("#sucursal").append("<option value='" + sucursal.codigosucursal + "'>" + sucursal.nombre + "</option>");
+            });
+        },
+        error: function(xhr, status, error) {
+            alert("Error al obtener las sucursales");
+        }
+    });
+});
+
 
 
 </script>

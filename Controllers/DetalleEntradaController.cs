@@ -105,6 +105,40 @@ namespace SPCOIN.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<IActionResult> insertDetail(DetalleEntrada D)
+        {
+            try
+            {
+                using (SqlConnection con = new(_context.Conexion))
+                {
+                    using (SqlCommand cmd = new("IDETALLEENTRADA", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@CODIGOPRODUCTO", System.Data.SqlDbType.VarChar).Value = D.CodigoProducto;
+                        cmd.Parameters.Add("@UNIDADES", System.Data.SqlDbType.Real).Value = D.Unidades;
+                        cmd.Parameters.Add("@COSTO", System.Data.SqlDbType.Real).Value = D.Costo;
+                        cmd.Parameters.Add("@TOTAL", System.Data.SqlDbType.Real).Value = D.Costo * D.Unidades;
+                        cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = D.CodigoAsignacionPermisos;
+                        cmd.Parameters.Add("@CODIGOENTRADA", System.Data.SqlDbType.BigInt).Value = D.CodigoEntrada;
+
+                        con.Open();
+                        cmd.ExecuteNonQuery(); // Ejecutar el comando                        
+                    }
+                    con.Close();
+
+
+                }
+                return Json(new { success = true }); ;
+
+            }
+            catch (System.Exception e)
+            {
+                ViewBag.Error = e.Message;
+                return Json(new { success = false }); ;
+            }
+        }
+
 
     }
 }

@@ -523,6 +523,7 @@ $(document).ready(function() {
         "precio": precio,
         "codigoReparacion": codigoReparacion
     };
+
     $.ajax({
         type: "POST",
         url: "/Reparacion/insertDetail",
@@ -633,6 +634,7 @@ function buscarProductos() {
         dataType: 'json',
         success: function (productos) {
             console.log("obteniendo productos...");
+            console.log(productos);
    
             $('#resultados').empty();
             if (productos.status) {
