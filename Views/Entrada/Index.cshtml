@@ -1,5 +1,6 @@
 ﻿
 
+
 <div class="container-fluid">
   <div class="row justify-content-center mt-4">
     <div class="col-md-4">
@@ -57,7 +58,7 @@
         <div class="d-grid gap-2 col-6 mx-auto">
              <input type="hidden" id="codigoentrada">
            <button type="button" class="btn btn-primary"  id="btnDetalle">Ver detalle</button>
-       @*   <button class="btn btn-primary" type="button" id="btnModificar">Modificar</button>*@
+           @*<button class="btn btn-primary" type="button" id="btnModificar">Modificar</button>*@
           <button class="btn btn-danger" type="button" id="btnEliminar">Eliminar</button>
     <button class="btn btn-secondary" type="button" id="btnCancelar" data-bs-dismiss="modal">Cancelar</button>
 
@@ -204,9 +205,11 @@
           </div>
         <div class="form-group">
     <label for="sucursal">Sucursal</label>
+    
     <select class="form-control" id="sucursal" name="sucursal" required>
-        <option value="">Seleccionar Sucursal</option>
-    </select>
+    <option value="">Seleccionar Sucursal</option>
+</select>
+
         </div>
       
           <div class="form-group">
@@ -216,12 +219,53 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="cerrarModal()">Cancelar</button>
-          <button type="button" class="btn btn-primary" onclick="guardarReparacion()">Aceptar</button>
+          <button type="button" class="btn btn-primary" onclick="guardarEntrada()">Aceptar</button>
         </div>
       </form>
     </div>
   </div>
 </div>
+
+
+
+<div class="modal fade" id="modificar" tabindex="-1" role="dialog" aria-labelledby="UpdateLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="UpdateLabel">Modificar Entrada</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <input type="hidden" id="codigoentrada">
+          <div class="form-group">
+            <label for="fecha">Fecha</label>
+            <input type="date" class="form-control" id="fecha" required>
+          </div>
+          <div class="form-group">
+            <label for="sucursal">Sucursal</label>
+            <select class="form-control" id="sucursal" required>
+              <option value="">Seleccione una opción</option>
+              <!-- Las opciones de sucursales se cargarán dinámicamente mediante AJAX -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <textarea class="form-control" id="descripcion" rows="3" required></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="actualizarEntrada()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 
 <script>
@@ -253,7 +297,7 @@
     dataType: "json",
     data: { "fechaInicial": fechaInicial, "fechaFinal": fechaFinal, "busqueda": busqueda },
     success: function (result) {
-             console.log(result);
+           
       if (result.status) {
      
           
@@ -272,7 +316,7 @@
 }
 
 function llenarTablaEntrada(data) {
-  console.log('Llenando tabla con datos:', data);
+
   var tablaEntrada = $('#tablaEntradaBody');
   tablaEntrada.empty();
   $.each(data, function(index, row) {
@@ -297,7 +341,7 @@ $(document).ready(function() {
   // Agregar evento click al botón de buscar
   $("#btn-buscar").click(function() {
     cargarDatos();
-    console.log("kfañsl");
+
   });
 });
 
@@ -308,7 +352,7 @@ $(document).ready(function() {
 
 $('#btnDetalle').click(function() {
   var codigoEntrada = $('#codigoentrada').val();
-  console.log('El código de entrada es btn detalle:', codigoEntrada);
+ 
      LlenaDetalle(codigoEntrada);
      $('#detalle-modal').modal('show');
      $('#modalOpciones').modal('hide');
@@ -323,7 +367,7 @@ $(document).on('click', '.btnOpciones', function() {
   //  
   $('#modalOpciones').modal('show');
   $('#codigoentrada').val(codigoEntrada);
-    console.log('El código de entrada es         nnn:', codigoEntrada);
+
 
 });
 
@@ -339,17 +383,17 @@ function LlenaDetalle(codigoEntrada) {
       
       if (response.status == true) {
         var datos = response.data;
-        console.log('Datos recibidos:');
+      
   
         llenarTablaDetalle(datos);
       } else {
-        console.log('Error en la respuesta:');
+      
       
         alert(response.message);
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
-      console.log('Error en la llamada AJAX:');
+
       console.log(textStatus, errorThrown);
     }
   });
@@ -424,7 +468,7 @@ $(document).ready(function() {
         "costo": costo,
         "codigoEntrada": codigoEntrada
     };
-    console.log(dataToSend);
+
     $.ajax({
         type: "POST",
         url: "/DetalleEntrada/insertDetail",
@@ -449,27 +493,32 @@ $(document).ready(function() {
   });
 });
 
+function obtenerProducto() {
+  var codigoProducto = $('#input-codigo-producto').val();
+  
+  $.ajax({
+    type: 'GET',
+    url: '/product/ObtenerProducto',
+    data: { codigo: codigoProducto },
+    dataType: 'json',
+    success: function(data) {
+      $('#input-precio').val(data.costo);
+      $('#input-nombre-producto').val(data.nombre);
+      $('#input-unidades').val(1);
+      calcularTotal();
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log('Error en la solicitud: ' + errorThrown);
+    }
+  });
+}
+
 $(document).ready(function() {
   $('#input-codigo-producto').on('input', function() {
-    console.log('Se ha ingresado una letra en el input del código');
-    var codigoProducto = $(this).val();
-    $.ajax({
-      type: 'GET',
-      url: '/product/ObtenerProducto',
-      data: { codigo: codigoProducto },
-      dataType: 'json',
-      success: function(data) {
-        $('#input-precio').val(data.costo);
-        $('#input-nombre-producto').val(data.nombre);
-        $('#input-unidades').val(1);
-     calcularTotal();
-      },
-      error: function(jqXHR, textStatus, errorThrown) {
-        console.log('Error en la solicitud: ' + errorThrown);
-      }
-    });
+    obtenerProducto();
   });
 });
+
 
 
 function calcularTotal() {
@@ -518,7 +567,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
     $('#busquedaproduct').on('keyup', function () {
-         console.log('Se presionó una tecla en el input');
+
          buscarProductos();
     });
 });
@@ -530,14 +579,14 @@ $(document).ready(function () {
 
 function buscarProductos() {
     var busqueda = $('#busquedaproduct').val();
-    console.log("buscando productos con la cadena: " + busqueda);
+
     $.ajax({
         type: "GET",
         url: "product/consultaProducto",
         data: {busqueda: busqueda},
         dataType: 'json',
         success: function (productos) {
-            console.log("obteniendo productos...");
+
             $('#resultados').empty();
             if (productos.status) {
                 $.each(productos.data, function (i, producto) {
@@ -553,7 +602,7 @@ function buscarProductos() {
                     '</tr>';
                     $('#resultados').append(row);
                 });
-                console.log("productos cargados correctamente.");
+           
 
                 // Agregar evento click al botón "Agregar" para llenar campos del modal detalle y cerrar modal de búsqueda
                 $('#resultados button').click(function() {
@@ -561,9 +610,10 @@ function buscarProductos() {
                     var nombre = $(this).data('nombre');
                     var precio = $(this).data('precio');
                     $('#input-codigo-producto').val(codigo);
-                    $('#input-nombre-producto').val(nombre);
-                    $('#input-precio').val(precio);
-                    $('#input-total').val(precio);
+                    //$('#input-nombre-producto').val(nombre);
+                    //$('#input-precio').val(precio);
+                    //$('#input-total').val(precio);
+                    obtenerProducto();
                     $('#detalle-modal').modal('show');
                     $('#busquedaModal').modal('hide');
                 });
@@ -581,9 +631,10 @@ function buscarProductos() {
 
 function agregarProducto(codigo, nombre, costo) {
     $('#input-codigo-producto').val(codigo);
-    $('#input-nombre-producto').val(nombre);
+   var nombreProducto = $('#input-nombre-producto').val();
     $('#input-precio').val(costo);
     $('#input-unidades').val(1);
+   console.log('dd');
     calcularTotal();
     $('#detalle-modal').modal('show');
         $('#busquedaModal').modal('hide');
@@ -617,15 +668,16 @@ var formattedDate = year + '-' + month + '-' + day;
 // Establecer el valor de los elementos de entrada de fecha como la fecha actual
 document.getElementById('fecha').value = formattedDate;
 
+
 $(document).ready(function() {
     $.ajax({
         type: "GET",
         url: "/sucursal/obtenerSucursales",
         dataType: "json",
         success: function(data) {
-            console.log(data);
+      
             $.each(data, function(index, sucursal) {
-                $("#sucursal").append("<option value='" + sucursal.codigosucursal + "'>" + sucursal.nombre + "</option>");
+                $("#sucursal").append("<option value='" + sucursal.codigoSucursal + "'>" + sucursal.nombre + "</option>");
             });
         },
         error: function(xhr, status, error) {
@@ -636,6 +688,55 @@ $(document).ready(function() {
 
 
 
+function guardarEntrada() {
+   var codSucursal = $('#sucursal option:selected').val();
+  if (codSucursal > 0) {
+    var formData = {
+      'fecha': $('#fecha').val(),
+      'codigosucursal': codSucursal,
+      'descripcion': $('#descripcion').val()
+    };
+    
+    $.ajax({
+      type: 'POST',
+      url: '@Url.Action("Create", "Entrada")',
+      data: formData,
+      success: function(data) {
+        // Cierra el modal después de enviar la petición
+        $('#Create').modal('hide');
+        // Recarga la página después de cerrar el modal
+        location.reload();
+      },
+      error: function(xhr, status, error) {
+        // En caso de error, muestra el mensaje de error en la consola.
+        console.error(error);
+      }
+    });
+  } else {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Seleccione una sucursal',
+      showConfirmButton: false,
+      timer: 2000
+    });
+  }
+}
+
+$('#btnModificar').click(function() {
+// código para abrir el modal de modificar
+  $('#Modificar').modal('show');
+});
+
+
+
+$(document).ready(function() {
+  $('.eliminarBtn').click(function() {
+    var codigoReparacion = $(this).data('codigo-Entrada');
+    console.log(codigoEntrada); // Agregamos el console.log para mostrar el valor de codigoreparacion
+    $('#eliminarModal').modal('show');
+    $('#codigoEntradaEliminar').val(codigoEntrada);
+  });
+})
 </script>
 
 

@@ -77,6 +77,76 @@ namespace SPCOIN.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<IActionResult> Create(Entrada E)
+        {
+            try
+            {
+                using (SqlConnection con = new(_context.Conexion))
+                {
+                    using (SqlCommand cmd = new("IENTRADA", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@FECHA", System.Data.SqlDbType.Date).Value = E.Fecha;
+                        cmd.Parameters.Add("@CODIGOSUCURSAL", System.Data.SqlDbType.BigInt).Value = E.CodigoSucursal;
+                        cmd.Parameters.Add("@DESCRIPCION", System.Data.SqlDbType.VarChar).Value = E.Descripcion;
+                        cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = HttpContext.Session.GetInt32("CODIGOASIGNACIONPERMISOS");
+                        con.Open();
+                        cmd.ExecuteNonQuery(); // Ejecutar el comando                        
+                    }
+                    con.Close();
+
+
+                }
+                return Json(new { success = true }); ;
+
+            }
+            catch (System.Exception e)
+            {
+                ViewBag.Error = e.Message;
+                return Json(new { success = false }); ;
+            }
+        }
+
+        public async Task<IActionResult> ObtenerEntrada(int codigoEntrada)
+        {
+            try
+            {
+                Entrada entrada = null;
+                using (SqlConnection con = new SqlConnection(_context.Conexion))
+                {
+                    using (SqlCommand cmd = new SqlCommand("SBUSCAENTRADA", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@CODIGOENTRADA", System.Data.SqlDbType.Int).Value = codigoEntrada;
+                        con.Open();
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                        {
+                            if (reader.Read())
+                            {
+                                entrada = new Entrada()
+                                {
+                                    CodigoEntrada = Convert.ToInt32(reader["CODIGOENTRADA"]),
+                                    Fecha = Convert.ToDateTime(reader["FECHA"]),
+                                    Sucursal = Convert.ToString(reader["SUCURSAL"]),
+                                    Descripcion = Convert.ToString(reader["DESCRIPCION"])
+                                };
+                            }
+                        }
+                    }
+                }
+
+                return Json(entrada);
+            }
+            catch (Exception e)
+            {
+                return Json(new { error = e.Message });
+            }
+        }
+
+
+
+
 
     }
 }
