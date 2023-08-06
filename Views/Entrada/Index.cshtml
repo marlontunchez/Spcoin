@@ -737,6 +737,48 @@ $(document).ready(function() {
     $('#codigoEntradaEliminar').val(codigoEntrada);
   });
 })
+
+
+$('#btnEliminar').on('click', function() {
+
+    var codigoEntrada = $('#codigoentrada').val();
+  // Abrir el modal de eliminación
+  $('#eliminarModal').modal('show');
+  
+  // Establecer el valor del código de entrada en el campo oculto del modal
+  $('#codigoEntradaEliminar').val(codigoEntrada);
+  
+  console.log(codigoEntrada);
+});
+
+$('#confirmarEliminarBtn').on('click', function() {
+  // Obtener el código de entrada a eliminar desde el campo oculto en el modal
+  var codigoEntrada = $('#codigoEntradaEliminar').val();
+  
+  // Realizar la solicitud AJAX para eliminar la entrada
+  $.ajax({
+    type: 'DELETE',
+    url: '/entrada/Delete',
+    data: { codigoEntrada: codigoEntrada },
+    success: function(response) {
+      // Realizar acciones adicionales después de eliminar la entrada
+      console.log('Entrada eliminada correctamente');
+      console.log(codigoEntrada);
+      // Aquí puedes realizar acciones adicionales, como actualizar la tabla de entradas o mostrar un mensaje de éxito.
+    },
+    error: function(xhr, status, error) {
+      // Manejar el error en caso de que ocurra durante la solicitud AJAX
+      console.error(error);
+    }
+  });
+});
+
+
+
+
+
+
+
 </script>
 
 
