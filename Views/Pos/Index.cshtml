@@ -1,0 +1,80 @@
+﻿<div class="row">
+  <!-- Lado izquierdo -->
+  <div class="col-md-6">
+    <div class="form-group">
+      <label for="inputNit">NIT:</label>
+      <input type="text" class="form-control" id="inputNit" placeholder="Ingrese el NIT">
+    </div>
+    <div class="form-group">
+      <label for="inputNombre">Nombre:</label>
+      <input type="text" class="form-control" id="inputNombre" placeholder="Ingrese el nombre">
+    </div>
+    <div class="form-group">
+      <label for="inputDireccion">Dirección:</label>
+      <input type="text" class="form-control" id="inputDireccion" placeholder="Ingrese la dirección">
+    </div>
+    <div class="form-group">
+      <label for="listFormaPago">Forma de pago:</label>
+      <select class="form-control" id="listFormaPago">
+        <option value="Efectivo">Efectivo</option>
+        <option value="Tarjeta">Tarjeta de crédito</option>
+        <option value="Transferencia">Transferencia bancaria</option>
+        <!-- Agregar más opciones de forma de pago según sea necesario -->
+      </select>
+      <label for="Documento">Documento:</label>
+      <select class="form-control" id="Documento">
+        <option value="Efectivo">Factura</option>
+        <option value="Tarjeta">Envio</option>
+        <option value="Transferencia">Transferencia bancaria</option>
+        <!-- Agregar más opciones de forma de pago según sea necesario -->
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="inputTotal">Total:</label>
+      <input type="number" class="form-control" id="inputTotal" placeholder="Ingrese el total" value="0">
+    </div>
+    <button type="button" class="btn btn-primary" id="btnGrabarVenta">Grabar Venta</button>
+  </div>
+
+  <!-- Lado derecho -->
+  <div class="col-md-6">
+    <!-- Cuadro de búsqueda -->
+    <div class="form-group">
+      <label for="txtBusqueda">Buscar producto:</label>
+      <input type="text" class="form-control" id="txtBusqueda" placeholder="Ingrese el nombre del producto">
+    </div>
+    <!-- Tabla de productos -->
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Código Producto</th>
+          <th>Nombre Producto</th>
+          <th>Unidades</th>
+          <th>Precio</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Aquí se agregarán las filas de los productos -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    // Datos de ejemplo para el autocompletar (puedes cambiarlo por tu propia lista de productos)
+    var productos = [
+      "Producto 1",
+      "Producto 2",
+      "Producto 3",
+      // Agrega aquí más productos
+    ];
+
+    // Configurar el autocompletar en el input con el id "txtBusqueda"
+    $("#txtBusqueda").autocomplete({
+      source: productos, // Especifica la fuente de datos para el autocompletar
+      minLength: 1 // Especifica la cantidad mínima de caracteres para activar el autocompletar
+    });
+  });
+</script>
