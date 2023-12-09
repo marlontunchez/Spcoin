@@ -307,10 +307,8 @@
                                             <a asp-area="" asp-controller="POS" asp-action="index" class="sidebar-link"><i class="mdi mdi-note-outline"></i><span class="hide-menu">Punto de Venta </span></a>
                                         </li>
                                         <li class="sidebar-item">
-                                            <a class="nav-link text-dark" asp-area="" asp-controller="Ventas" asp-action="index">Historial de Ventas</a>
-
-                                            <a class="nav-link text-dark" asp-area="" asp-controller="Ventas" asp-action="index" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu">Historial de Ventas</span></a>
-                                        </li>
+                                                <a  asp-area="" asp-controller="Ventas" asp-action="index" class="sidebar-link"><i class="mdi mdi-note-outline"></i><span class="hide-menu">Historial de Ventas</span></a>
+                                 </li>
                                     </ul>
                                 </li>
                                 <li class="sidebar-item">
@@ -490,11 +488,12 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 
     @*<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
