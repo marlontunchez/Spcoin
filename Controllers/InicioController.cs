@@ -127,6 +127,37 @@ namespace SPCOIN.Controllers
             }
         }
 
+        public async Task<IActionResult> ObtenerDatosVentasHoy()
+        {
+            try
+            {
+                int ventasHoy = 0;
+                using (SqlConnection con = new SqlConnection(_context.Conexion))
+                {
+                    using (SqlCommand cmd = new SqlCommand("SVENTASHOY", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = HttpContext.Session.GetInt32("CODIGOASIGNACIONPERMISOS");
+
+                        con.Open();
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                        {
+                            if (reader.Read())
+                            {
+                                ventasHoy = Convert.ToInt32(reader["VENTAS"]);
+                            }
+                        }
+                    }
+                }
+
+                return Json(new { ventasHoy });
+            }
+            catch (Exception e)
+            {
+                ViewBag.Error = e.Message;
+                return Json(new { Error = e.Message });
+            }
+        }
 
     }
 }

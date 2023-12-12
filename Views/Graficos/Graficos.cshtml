@@ -1,8 +1,4 @@
-﻿<canvas id="myChart"></canvas>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-	<div class="container-fluid p-0">
+﻿			<div class="container-fluid p-0">
 
 					<h1 class="h3 mb-3"><strong>Analytics</strong> Dashboard</h1>
 
@@ -271,57 +267,3 @@
 
 				</div>
 				
-<script>
-  var myChart;
-
-  function getData() {
-    $.ajax({
-      url: "/home/Ventaspormes",
-      type: "GET",
-      dataType: "json",
-      success: function(data) {
-        var labels = data.map(item => item.MES);
-        var values = data.map(item => item.VENTAS);
-
-        // Destroy existing chart if it exists
-        if (myChart) {
-          myChart.destroy();
-        }
-
-        // Create a new chart
-        myChart = drawPieChart(labels, values);
-      },
-      error: function(jqXHR, textStatus, errorThrown) {
-        console.error(textStatus, errorThrown);
-      }
-    });
-  }
-
-  function drawPieChart(labels, values) {
-    var ctx = document.getElementById("myChart").getContext("2d");
-
-    return new Chart(ctx, {
-      type: "pie",
-      data: {
-        labels: labels,
-        datasets: [{
-          data: values,
-          backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#2ecc71", "#3498db", "#f1c40f", "#e74c3c", "#9b59b6", "#34495e", "#16a085", "#27ae60", "#2980b9"],
-        }],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-      },
-    });
-  }
-
-  $(document).ready(function() {
-    getData();
-
-    // Handle window resize event
-    $(window).on('resize', function() {
-      getData();
-    });
-  });
-</script>
