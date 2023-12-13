@@ -16,18 +16,18 @@
 	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
 
 	<title>Pachecos</title>
-
-	<link href="~/css/app.css" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-	  <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/SPCOIN.styles.css" asp-append-version="true" />
-     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
-	 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<link href="~/css/app.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/SPCOIN.styles.css" asp-append-version="true" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 
 
@@ -56,27 +56,43 @@
 
 
 					<li class="sidebar-item">
+						<a class="sidebar-link" asp-area="" asp-controller="Ventas" asp-action="Index">
+              <i class="align-middle" data-feather="user"></i> <span class="align-middle">Historial de Ventas</span>
+            </a>
+					</li>
+
+					<li class="sidebar-item">
 						<a class="sidebar-link" asp-area="" asp-controller="Reparacion" asp-action="Index">
-              <i class="align-middle" data-feather="user"></i> <span class="align-middle">Ventas</span>
-            </a>
-					</li>
-
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="~/pages-sign-in.html">
-              <i class="align-middle" data-feather="log-in"></i> <span class="align-middle">Sign In</span>
+              <i class="align-middle" data-feather="log-in"></i> <span class="align-middle">Reparación</span>
             </a>
 					</li>
 
 
 					<li class="sidebar-item">
-						<a class="sidebar-link" href="pages-blank.html">
-              <i class="align-middle" data-feather="book"></i> <span class="align-middle">Blank</span>
+						<a class="sidebar-link" asp-area="" asp-controller="Entrada" asp-action="index">
+              <i class="align-middle" data-feather="book"></i> <span class="align-middle">Entradas</span>
             </a>
 					</li>
+				<li class="sidebar-item">
+						<a class="sidebar-link" asp-area="" asp-controller="Salida" asp-action="index">
+              <i class="align-middle" data-feather="book"></i> <span class="align-middle">Salidas</span>
+            </a>
+					</li>
+						<li class="sidebar-item">
+						<a class="sidebar-link" asp-area="" asp-controller="Pos" asp-action="index">
+              <i class="align-middle" data-feather="book"></i> <span class="align-middle">Punto de Venta</span>
+            </a>
+					</li>
+								<li class="sidebar-item">
+						<a class="sidebar-link" asp-area="" asp-controller="Sucursal" asp-action="index">
+              <i class="align-middle" data-feather="book"></i> <span class="align-middle">Sucursales</span>
+            </a>
+					</li>
+
 
 					<li class="sidebar-header">
-						Tools & Components
-					</li>
+						Otras opciones
+						</li>
 
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="ui-buttons.html">
@@ -125,17 +141,7 @@
 					</li>
 				</ul>
 
-				<div class="sidebar-cta">
-					<div class="sidebar-cta-content">
-						<strong class="d-inline-block mb-2">Upgrade to Pro</strong>
-						<div class="mb-3 text-sm">
-							Are you looking for more components? Check out our premium version.
-						</div>
-						<div class="d-grid">
-							<a href="upgrade-to-pro.html" class="btn btn-primary">Upgrade to Pro</a>
-						</div>
-					</div>
-				</div>
+				
 			</div>
 		</nav>
 
@@ -567,10 +573,13 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Include Bootstrap JavaScript after jQuery -->
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
   
 </body>
 
