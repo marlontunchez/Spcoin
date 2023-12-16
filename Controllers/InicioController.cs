@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
+using SPCOIN.Models;
 
 namespace SPCOIN.Controllers
 {
@@ -23,6 +24,10 @@ namespace SPCOIN.Controllers
             public string labels { get; set; }
             public int data { get; set; }
         }
+
+
+       
+
 
         public async Task<IActionResult> VentasAnual()
         {
@@ -128,10 +133,14 @@ namespace SPCOIN.Controllers
         }
 
         public async Task<IActionResult> ObtenerDatosVentasHoy()
-        {
+        {           
+
             try
             {
-                int ventasHoy = 0;
+                
+                decimal  ventasHoy = 0;
+                decimal margen = 0;
+
                 using (SqlConnection con = new SqlConnection(_context.Conexion))
                 {
                     using (SqlCommand cmd = new SqlCommand("SVENTASHOY", con))
@@ -141,16 +150,20 @@ namespace SPCOIN.Controllers
 
                         con.Open();
                         using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
-                        {
+                        {                            
                             if (reader.Read())
                             {
-                                ventasHoy = Convert.ToInt32(reader["VENTAS"]);
+                                ventasHoy = Convert.ToDecimal(reader["VENTAS"]);
+                                margen = Convert.ToDecimal(reader["MARGEN"]);
+                         
                             }
                         }
+
                     }
                 }
 
-                return Json(new { ventasHoy });
+                // Devuelve un objeto anónimo con todas las propiedades necesarias
+                return Json(new { TotalVentas = ventasHoy, Margen = margen  }); // Ajusta Margen según tus necesidades
             }
             catch (Exception e)
             {

@@ -11,7 +11,7 @@
         public string? Nit { get; set; }
         public string? FormaDePago { get; set; }
         public string? Documento { get; set; }
-        public Decimal Total { get; set; }
+        public decimal Total { get; set; }
         public  string? Estado { get; set; }
         public string? UuId { get; set; }
         public string? Numero { get; set; }
@@ -19,5 +19,7 @@
         public Int64 CodigoDocumento { get; set; }
         public string? Vendedor { get; set; }
         public string? Comentario { get; set; }
+        public  decimal Totalventas { get; set; }
+        public decimal Margen { get; set; }
     }
 }

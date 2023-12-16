@@ -12,8 +12,7 @@
 
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link rel="shortcut icon" href="~/img/icons/icon-48x48.png" />
-
-	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
+ @*  <link rel="canonical" href="https://demo-basic.adminkit.io/" />*@
 
 	<title>Pachecos</title>
 <link href="~/css/app.css" rel="stylesheet">
@@ -570,13 +569,14 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 <!-- Include Bootstrap JavaScript after jQuery -->
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
 
     @await RenderSectionAsync("Scripts", required: false)
 
