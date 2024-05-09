@@ -41,7 +41,7 @@
 
 													<span class="text-danger" id="TMargen"> <i class="mdi mdi-arrow-bottom-right" id="margen"></i></span>
 												
-													<span class="text-muted"></span>
+													<span class="text-muted"> desde la semana pasada</span>
 												</div>
 											</div>
 										</div>
@@ -49,7 +49,7 @@
 											<div class="card-body">
 												<div class="row">
 													<div class="col mt-0">
-														<h5 class="card-title">Visitors</h5>
+														<h5 class="card-title" >Ventas</h5>
 													</div>
 
 													<div class="col-auto">
@@ -58,10 +58,10 @@
 														</div>
 													</div>
 												</div>
-												<h1 class="mt-1 mb-3">14.212</h1>
+												<h1 class="mt-1 mb-3" id="TCantVentas"></h1>
 												<div class="mb-0">
-													<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> 5.25% </span>
-													<span class="text-muted">Since last week</span>
+													<span class="text-danger" id="TMargenV"> <i class="mdi mdi-arrow-bottom-right" id="Margenv"></i></span>
+													<span class="text-muted">Desde la semana pasada</span>
 												</div>
 											</div>
 										</div>
@@ -71,7 +71,7 @@
 											<div class="card-body">
 												<div class="row">
 													<div class="col mt-0">
-														<h5 class="card-title">Ganancias</h5>
+														<h5 class="card-title">Utilidades</h5>
 													</div>
 
 													<div class="col-auto">
@@ -80,10 +80,11 @@
 														</div>
 													</div>
 												</div>
-												<h1 class="mt-1 mb-3">$21.300</h1>
+												<h1 class="mt-1 mb-3" id="TUtilidad"></h1>
 												<div class="mb-0">
-													<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> 6.65% </span>
-													<span class="text-muted">Since last week</span>
+												
+													<span class="text-danger" id"TMargenU"> <i class="mdi mdi-arrow-bottom-right" id="Margenu"></i></span>
+													<span class="text-muted">Desde la semana pasada</span>
 												</div>
 											</div>
 										</div>
@@ -370,13 +371,12 @@ $(document).ready(function() {
 
 
 function obtenerDatosVentasAnual() {
-  console.log("Solicitando datos...");
+
   $.ajax({
     url: "/inicio/ventasanual",
     type: "GET",
     dataType: "json",
     success: function(data) {
-        console.log(data);
         ChartVentasAnual(data);
   //   if (data && data.data && data.data.length) {
   //  console.log(data);
@@ -431,13 +431,13 @@ function ChartVentasAnual(datos) {
 }
 
 function ObtenerVendedoresAnual() {
-  console.log("Solicitando datos...");
+
   $.ajax({
     url: "/inicio/vendedoresanual",
     type: "GET",
     dataType: "json",
     success: function(data) {
-      console.log(data);
+   
       ChartvendedoresAnual(data);
     },
     error: function(jqXHR, textStatus, errorThrown) {
@@ -496,13 +496,13 @@ function ChartvendedoresAnual(datos) {
 
 
 function ObtenerVendedoresMensual() {
-  console.log("Solicitando datos...");
+ 
   $.ajax({
     url: "/inicio/vendedoresmensual",
     type: "GET",
     dataType: "json",
     success: function(data) {
-      console.log(data);
+
       ChartvendedoresMensual(data);
     },
     error: function(jqXHR, textStatus, errorThrown) {
@@ -519,10 +519,6 @@ function ChartvendedoresMensual(datos) {
     ventas.push(datos.data[i]);
 
   }
-
-
-
-  
   var ctx = document.getElementById("Vendedoresmes").getContext('2d');
   var chart = new Chart(ctx, {
     type: 'pie',
@@ -561,20 +557,27 @@ function ChartvendedoresMensual(datos) {
     }
   });
 }
-
-function actualizarDatos() {
+function ObtenerTotalVentasSemanales() {
     $.ajax({
         url: "/Inicio/ObtenerDatosVentasHoy",
         type: "GET",
         dataType: "json",
         success: function (data) {
-            console.log(data); // Corregido: console.log en lugar de consle.log
-		
-            // Actualizar el total de ventas
-            $("#TVenta").text(data.totalVentas);
-			
-            // Actualizar el margen
-            $("#margen").text(data.margen);
+          
+
+            // Actualizar el total de ventas con el símbolo de quetzales
+            var totalVentasConQ = "Q." + data.totalVentas.toFixed(2);
+            $("#TVenta").text(totalVentasConQ);
+
+            // Agregar el signo de porcentaje al margen
+            var margenConPorcentaje = data.margen.toFixed(2) + "%";
+
+            // Actualizar el margen con el signo de porcentaje y el símbolo de quetzales
+            $("#margen").text(margenConPorcentaje);
+
+            // Cambiar el color del texto en función de data.margen
+            var colorClass = data.margen >= 0 ? "text-success" : "text-danger";
+            $("#TMargen").removeClass("text-danger text-black").addClass(colorClass);
         },
         error: function (error) {
             console.log("Error al obtener datos de ventas hoy:", error);
@@ -582,10 +585,66 @@ function actualizarDatos() {
     });
 }
 
+function ObtenerUtilidadesSemanales() {
+    $.ajax({
+        url: "/Inicio/UtilidadSemanal",
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+         
+			            // Agregar el signo de porcentaje al margen
+          
+
+            // Actualizar la cantidad de ventas de la semana actual
+            $("#TUtilidad").text("Q." +data.utilidadTotal);
+
+            // Actualizar la cantidad de ventas de la semana pasada
+		
+            $("#Margenu").text(data.margen.toFixed(2) + "%");
+			        // Cambiar el color del texto en función de data.margen
+            var colorClass = data.margen >= 0 ? "text-success" : "text-danger";
+            $("#TMargenU").removeClass("text-danger text-black").addClass(colorClass);
+        },
+        error: function (error) {
+            console.log("Error al obtener datos de ventas hoy:", error);
+        }
+    });
+}
+
+function ObtenerVentas() {
+    $.ajax({
+        url: "/Inicio/VentasSemanal",
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+			console.log(data);
+         
+			            // Agregar el signo de porcentaje al margen
+                      // Actualizar la cantidad de ventas de la semana actual
+            $("#TCantVentas").text(data.ventasTotal);
+
+            // Actualizar la cantidad de ventas de la semana pasada
+		
+            $("#Margenv").text(data.margen.toFixed(2) + "%");
+			        // Cambiar el color del texto en función de data.margen
+            var colorClass = data.margen >= 0 ? "text-success" : "text-danger";
+            $("#TMargenV").removeClass("text-danger text-black").addClass(colorClass);
+        },
+        error: function (error) {
+            console.log("Error al obtener datos de ventas hoy:", error);
+        }
+    });
+}
 
     // Llama a la función al cargar la página o cuando sea necesario
     $(document).ready(function () {
-        actualizarDatos();
+        ObtenerTotalVentasSemanales();
+    });
+	 $(document).ready(function () {
+        ObtenerUtilidadesSemanales();
     });
 
+	 $(document).ready(function () {
+        ObtenerVentas();
+    });
 </script>

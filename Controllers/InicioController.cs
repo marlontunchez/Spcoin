@@ -172,5 +172,86 @@ namespace SPCOIN.Controllers
             }
         }
 
+
+        public async Task<IActionResult> UtilidadSemanal()
+        {
+
+            try
+            {
+
+                decimal UTILIDAD = 0;
+                decimal Margen = 0;
+
+                using (SqlConnection con = new SqlConnection(_context.Conexion))
+                {
+                    using (SqlCommand cmd = new SqlCommand("SUTILIDADSEMANAL", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = HttpContext.Session.GetInt32("CODIGOASIGNACIONPERMISOS");
+
+                        con.Open();
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                        {
+                            if (reader.Read())
+                            {
+                                UTILIDAD = Convert.ToDecimal(reader["UTILIDAD"]);
+                                Margen = Convert.ToDecimal(reader["MARGEN"]);
+
+                            }
+                        }
+
+                    }
+                }
+
+                // Devuelve un objeto anónimo con todas las propiedades necesarias
+                return Json(new { UtilidadTotal = UTILIDAD, Margen = Margen }); // Ajusta Margen según tus necesidades
+            }
+            catch (Exception e)
+            {
+                ViewBag.Error = e.Message;
+                return Json(new { Error = e.Message });
+            }
+        }
+
+        public async Task<IActionResult> VentasSemanal()
+        {
+
+            try
+            {
+
+                decimal Ventas = 0;
+                decimal Margen = 0;
+
+                using (SqlConnection con = new SqlConnection(_context.Conexion))
+                {
+                    using (SqlCommand cmd = new SqlCommand("SVENTASSEMANAL", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = HttpContext.Session.GetInt32("CODIGOASIGNACIONPERMISOS");
+
+                        con.Open();
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                        {
+                            if (reader.Read())
+                            {
+                                Ventas = Convert.ToDecimal(reader["VENTAS"]);
+                                Margen = Convert.ToDecimal(reader["MARGEN"]);
+
+                            }
+                        }
+
+                    }
+                }
+
+                // Devuelve un objeto anónimo con todas las propiedades necesarias
+                return Json(new { VentasTotal = Ventas, Margen = Margen }); // Ajusta Margen según tus necesidades
+            }
+            catch (Exception e)
+            {
+                ViewBag.Error = e.Message;
+                return Json(new { Error = e.Message });
+            }
+        }
+
     }
 }

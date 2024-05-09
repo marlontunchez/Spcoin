@@ -10,6 +10,8 @@
         public string? Mecanico { get; set; }
         public bool ConvertidoAVenta { get; set; }
         public int Codigoasignacionpermisos { get; set; }
+        public string? Matricula { get; set; }
+        public string? Cliente { get; set; }
 
 
 

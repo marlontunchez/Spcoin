@@ -70,11 +70,9 @@ namespace SPCOIN.Controllers
                             {
                                 Sucursal sucursal = new Sucursal()
                                 {
-
                                     CodigoSucursal = Convert.ToInt32(reader["CODIGOSUCURSAL"]),
                                     Nombre = Convert.ToString(reader["NOMBRE"]),
-                                 
-                                };
+                                 };
                                 sucursalesPermitidas.Add(sucursal);
                             }
                         }

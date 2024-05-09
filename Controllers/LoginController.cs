@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SPCOIN.Models;
 using System.Data.SqlClient;
@@ -45,6 +46,8 @@ namespace SPCOIN.Controllers
                         int codigousuario = codigousuarioParam.Value == DBNull.Value ? 0 : (int)codigousuarioParam.Value; // Validar si es nulo y asignar cero en su lugar
                         TempData["codigousuario"] = codigousuario;
                         HttpContext.Session.SetInt32("CODIGOUSUARIO", codigousuario);
+                        TempData["usuario"] = u.User;
+                   
                         if (codigousuario > 0)
                         {
                             List<Claim> c = new List<Claim>();

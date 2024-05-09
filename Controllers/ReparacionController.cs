@@ -41,6 +41,8 @@ namespace SPCOIN.Controllers
                                     Nombre = Convert.ToString(reader["NOMBRE"]),
                                     Motocicleta = Convert.ToString(reader["MOTOCICLETA"]),
                                     Mecanico = Convert.ToString(reader["MECANICO"]),
+                                    Matricula = Convert.ToString(reader["MATRICULA"]),
+                                    Cliente = Convert.ToString(reader["CLIENTE"]),
                                     ConvertidoAVenta = Convert.ToBoolean(reader["CONVERTIDOAVENTA"])
                                 };
                                 reparacionesrealizadas.Add(reparacion);
@@ -71,9 +73,10 @@ namespace SPCOIN.Controllers
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
                         cmd.Parameters.Add("@CODIGOCLIENTE", System.Data.SqlDbType.BigInt).Value = 1;
                         cmd.Parameters.Add("@CODIGOASIGNACIONPERMISOS", System.Data.SqlDbType.BigInt).Value = HttpContext.Session.GetInt32("CODIGOASIGNACIONPERMISOS");
-
                         cmd.Parameters.Add("@MOTOCICLETA", System.Data.SqlDbType.VarChar).Value = r.Motocicleta ;
                         cmd.Parameters.Add("@MECANICO", System.Data.SqlDbType.VarChar).Value = r.Mecanico;
+                        cmd.Parameters.Add("@MATRICULA", System.Data.SqlDbType.VarChar).Value = r.Matricula;
+                        cmd.Parameters.Add("@CLIENTE", System.Data.SqlDbType.VarChar).Value = r.Cliente;
                         con.Open();
                         cmd.ExecuteNonQuery(); // Ejecutar el comando                        
                     }
