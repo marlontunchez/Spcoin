@@ -11,7 +11,7 @@
     <PackageReference Include="Chart.js" Version="3.7.1" />
     <PackageReference Include="FluentAssertions" Version="6.10.0" />
     <PackageReference Include="materialize" Version="0.97.6" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
